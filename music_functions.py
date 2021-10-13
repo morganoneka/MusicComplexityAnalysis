@@ -192,7 +192,7 @@ def get_structure_dict(file_list):
                 
     return (structure_dict)
     
-def clean_structure_dict(structure_dict):
+def clean_structure_dict(structure_dict, maximum):
     # if a value is only in here once it's probably specialized to the tab it was taken from
     
     unique_values = []
@@ -203,7 +203,8 @@ def clean_structure_dict(structure_dict):
         # get the number of regions it maps after
         total_values = sum([sub_dict[k] for k in sub_dict])
         
-        if total_values == 1:
+        # if the total occurrences of the region is less than or equal to the maxium, add to list
+        if total_values <= maximum:
             unique_values.append(region_id)
             
     
