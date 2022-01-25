@@ -12,7 +12,8 @@ major_scale = [0,2,4,5,7,9,11]
 minor_scale = [0,2,3,5,7,8,10]
 
 numerals_major = ["I", "ii", "iii", "IV", "V", "vi", "vii°"]
-numerals_minor = ["i", "ii°", "II", "iv", "v", "VI", "VII"]
+numerals_minor = ["i", "ii°", "III", "iv", "v", "VI", "VII"]
+numerals = ["i", "ii", "iii", "iv", "v", "vi", "vii"]
 
 # get only the letter and if it's major/minor
 def clean_chord(chord):
@@ -108,10 +109,11 @@ def apply_capo(orig_key, capo):
         append = "m"
     
 
-    if ('#' in note):
+    
+    if (note.endswith("#")):
         orig_loc = notes_sharp.index(note) 
         return(notes_sharp[(orig_loc + capo)%12] + append)
-    elif ('b' in note):
+    elif (note.endswith("b")):
         orig_loc = notes_flat.index(note)
         return(notes_flat[(orig_loc + capo)%12] + append)
     else: #todo eventually we should choose flat vs. sharp based on what's in the tabs 
@@ -123,9 +125,10 @@ def get_notes(key):
     idx = major_scale
     if key.endswith("m"):
         idx = minor_scale
+    
     # by default we assume we're working with sharps, but change to flats if indicated
     notes = notes_sharp
-    if 'b' in key.split("m")[0]:
+    if flats_or_sharps(key) == "b":
         notes = notes_flat
     
     loc = notes.index(key.split("m")[0])
@@ -157,11 +160,60 @@ def get_relation(key, chord):
             return numerals_minor[chords.index(chord)]
         else:
             return numerals_major[chords.index(chord)]
-    else: #TODO implement
-        return "Not In Key Signature"
-        # if the root note is in the key then this won't be too hard
-        # i.e. if we're in C then E would be III
-        # but like...... what if it's Eb???? idk.
+    else:
+        # flat or sharp (very important apparently)
+        flat_or_sharp = flats_or_sharps(key)
+        
+        # trim minor
+        tonic_note = key.split("m")[0]
+        # chord can be minor or diminished
+        chord_note = convert_note(chord.split("m")[0].split("d")[0], flat_or_sharp)
+        
+        # if the NOTE is in the key signature but the chord isn't, that's easy.
+        notes_in_key_sig = get_notes(key)
+#         print("Chord Note: " + chord_note)
+#         print("Notes in Key Sig: " + " ".join(notes_in_key_sig))
+        if chord_note in notes_in_key_sig:
+            # identify what number it is in the key signature
+            my_num = numerals[notes_in_key_sig.index(chord_note)]
+            
+            if "dim" in chord:
+                return my_num + "°"
+            elif chord.endswith("m"):
+                return my_num 
+            else:
+                return my_num.upper()
+        
+        # if the NOTE isn't in the key signature, then that's a bit more work
+        else:
+            # if tonic uses sharps
+            if flat_or_sharp == "#":
+            
+                # find numeric for item one index lower in sharp notes
+                one_note_lower = notes_sharp[(notes_sharp.index(convert_note(chord_note,flat_or_sharp)) - 1) % 12]
+                my_num = numerals[notes_in_key_sig.index(one_note_lower)]
+                
+                if "dim" in chord:
+                    return "#" + my_num + "°"
+                elif chord.endswith("m"):
+                    return "#" + my_num 
+                else:
+                    return "#" + my_num.upper()
+                
+            else:
+                # find numeric for item one index higher in sharp notes
+                one_note_higher = notes_flat[(notes_flat.index(convert_note(chord_note,flat_or_sharp)) + 1) % 12]
+                my_num = numerals[notes_in_key_sig.index(one_note_higher)]
+                
+                if "dim" in chord:
+                    return "b" + my_num + "°"
+                elif chord.endswith("m"):
+                    return "b" + my_num 
+                else:
+                    return "b" + my_num.upper()
+                
+            
+        
         
 # get rid of numbers and such in region label
 def clean_region(rname):
@@ -276,3 +328,36 @@ def get_chord_structure_dict(file_list):
                     structure_dict[section][current_chord][next_chord] += 1
                 
     return (structure_dict)
+
+
+def flats_or_sharps(key_sig):
+    if "b" in key_sig:
+        return("b")
+    elif "#" in key_sig:
+        return("#")
+    elif key_sig in ["C", "Cm", "Dm", "F", "Fm", "Gm"]:
+        return("b")
+    else:
+        return("#")
+    
+def convert_note(note, end):
+    whitekey_aliases = {"Fb": "E",
+                  "E#": "F",
+                  "Cb": "B",
+                  "B#": "C"}
+    if end=="":
+        return whitekey_aliases[note]
+    elif end=="#":
+        if note in notes_sharp:
+            return note
+        else:
+            return notes_sharp[notes_flat.index(note)]
+    elif end=="b":
+        if note in notes_flat:
+            return note
+        else:
+            return notes_flat[notes_sharp.index(note)]
+    else:
+        return note
+    
+    
