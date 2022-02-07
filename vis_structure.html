@@ -29,10 +29,290 @@
    </div>
 
    <div class="row">
+    <h2>Number of unique sections</h2>
+   </div>
+
+   <div class="row">
+     <div class="col-md-4"><p>Sections in a song include a verse, chorus, bridge, outro, intro, solo, instrumental, etc. Some songs are very simple, including just verses and a repeating chorus. Others may include multiple different sections in addition to these staple sections. Thus, the number of unique sections is a measure of complexity.</p> </div>
+      <div class="col-md-4">
+        <div id="unique70s"></div>
+        <div id="unique70stable"></div>
+      </div>
+      <div class="col-md-4">
+        <div id="unique80s"></div>
+        <div id="unique80stable"></div>
+      </div>
+   </div>
+
+
+   <div class="row">
+     <div class="col-md-4">
+       <div id="unique90s"></div>
+       <div id="unique90stable"></div>
+     </div><div class="col-md-4">
+       <div id="unique00s"></div>
+       <div id="unique00stable"></div>
+     </div><div class="col-md-4">
+       <div id="unique10s"></div>
+       <div id="unique10stable"></div>
+     </div>
+   </div>
+
+
+
+   <div class="row">
+    <h2>Total number of sections</h2>
+   </div>
+
+   <div class="row">
+     <div class="col-md-4"></div>
+     <div class="col-md-4">
+       <div id="total70s"></div>
+       <div id="total70stable"></div>
+     </div>
+     <div class="col-md-4">
+       <div id="total80s"></div>
+       <div id="total80stable"></div>
+     </div>
+   </div>
+
+   <div class="row">
+     <div class="col-md-4">
+       <div id="total90s"></div>
+       <div id="total90stable"></div>
+     </div><div class="col-md-4">
+       <div id="total00s"></div>
+       <div id="total00stable"></div>
+     </div><div class="col-md-4">
+       <div id="total10s"></div>
+       <div id="total10stable"></div>
+     </div>
+   </div>
+
+
+
+   <div class="row">
      <div class="col-sm-12">
      <p><h1>Conclusions</h1></p>
-     <p>Are there major differences?</p>
+     <p>Looking purely at mathematical measures of structural variation, it appears as though overall complexity has remained the same across the last 50 years.</p>
    </div>
   </div>
    </div>
+
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   <script src="https://d3js.org/d3.v4.js"></script>
+   <script src="https://d3js.org/d3-array.v2.min.js"></script>
+   <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+
+
+   <script>
+   // https://snippets.bentasker.co.uk/page-1907020841-Calculating-Mean,-Median,-Mode,-Range-and-Percentiles-with-Javascript-Javascript.html
+
+   /** Calculate the mean value of an array of values
+    *
+    * @arg array
+    * @return mixed
+    */
+   function calcAverage(arr){
+       var a = arr.slice();
+       if (a.length){
+           sum = sumArr(a);
+           avg = sum / a.length;
+           return avg;
+       }
+       return false;
+   }
+
+   /** Extract the maximum in an array of values
+   *
+   * @arg arr - array
+   * @return float
+   */
+   function calcMax(arr){
+       return Math.max(...arr);
+   }
+
+   /** Calculate the Median of an array of values
+    *
+    */
+   function calcMedian(arr){
+           var a = arr.slice();
+           hf = Math.floor(a.length/2);
+           arr = sortArr(a);
+           if (a.length % 2){
+               return a[hf];
+           }else{
+               return (parseFloat(a[hf-1]) + parseFloat(a[hf])) / 2.0;
+           }
+
+   }
+
+   /** Extract the maximum in an array of values
+   *
+   * @arg arr - array
+   * @return float
+   */
+   function calcMin(arr){
+       return Math.min(...arr);
+   }
+
+   /** Calculate the Modal value
+   *
+   * @arg arr - array
+   * @return float
+   */
+   function calcMode(arr){
+       var ary = arr.slice();
+       t = ary.sort(function(a,b){
+           ary.filter(function(val){
+               val===a
+           }).length - ary.filter(function(val){
+               val===b
+           }).length});
+       return t.pop();
+   }
+
+   /** Calculate the 'q' quartile of an array of values
+   *
+   * @arg arr - array of values
+   * @arg q - percentile to calculate (e.g. 95)
+   */
+   function calcQuartile(arr,q){
+       var a = arr.slice();
+       // Turn q into a decimal (e.g. 95 becomes 0.95)
+       q = q/100;
+
+       // Sort the array into ascending order
+       data = sortArr(a);
+
+       // Work out the position in the array of the percentile point
+       var p = ((data.length) - 1) * q;
+       var b = Math.floor(p);
+
+       // Work out what we rounded off (if anything)
+       var remainder = p - b;
+
+       // See whether that data exists directly
+       if (data[b+1]!==undefined){
+           return parseFloat(data[b]) + remainder * (parseFloat(data[b+1]) - parseFloat(data[b]));
+       }else{
+           return parseFloat(data[b]);
+       }
+   }
+
+   /** Calculate the range for a set of values
+   *
+   * @arg arr - array
+   * @return float
+   */
+   function calcRange(arr){
+       mx = calcMax(arr);
+       mn = calcMin(arr);
+       return mx-mn;
+   }
+
+   /** Sum all values in an array
+    *
+    */
+   function sumArr(arr){
+       var a = arr.slice();
+       return a.reduce(function(a, b) { return parseFloat(a) + parseFloat(b); });
+   }
+
+   /** Sort values into ascending order
+   *
+   */
+   function sortArr(arr){
+       var ary = arr.slice();
+       ary.sort(function(a,b){ return parseFloat(a) - parseFloat(b);});
+       return ary;
+   }
+
+    var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1970_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRULEUDD7NAT5RD3HHUYQKW6RQ", function(data){createCharts(data, "unique70s", "total70s", title="1970s")});
+
+    var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1980_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRUJVPTLW3Z2Q5UUQ5IYQKXRZA", function(data){createCharts(data, "unique80s", "total80s", title="1980s")});
+
+    var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1990_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRU4TJ4FFAEEA3UPFMGYQKXTNQ", function(data){createCharts(data, "unique90s", "total90s", title="1990s")});
+
+    var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2000_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRULHS4EVZC2B3IGGPQYQKYCRA", function(data){createCharts(data, "unique00s", "total00s", title="2000s")});
+
+    var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2010_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRUB37MOBH2SWEI6SWCYQKX3LQ", function(data){createCharts(data, "unique10s", "total10s", title="2010s")});
+
+    function tabulate(data, columns, divname) {
+      var table = d3.select(divname).append('table').attr('class','table')
+      var thead = table.append('thead').attr('class','thead-dark')
+      var	tbody = table.append('tbody');
+
+      // append the header row
+      thead.append('tr')
+        .selectAll('th')
+        .data(columns).enter()
+        .append('th')
+          .text(function (column) { return column; });
+
+      // create a row for each object in the data
+      var rows = tbody.selectAll('tr')
+        .data(data)
+        .enter()
+        .append('tr');
+
+      // create a cell in each row for each column
+      var cells = rows.selectAll('td')
+        .data(function (row) {
+          return columns.map(function (column) {
+            return {column: column, value: row[column]};
+          });
+        })
+        .enter()
+        .append('td')
+          .text(function (d) { return d.value; });
+
+      return table;
+    }
+
+    function createCharts(allRows, div1, div2, title){
+      console.log(allRows);
+
+
+      var data_unique =[];
+      var data_total = [];
+      for (var i = 0; i<allRows.length; i++){
+        data_unique.push(parseInt(allRows[i].num_unique_sections));
+        data_total.push(parseInt(allRows[i].total_num_sections));
+      }
+      // console.log(data_unique);
+      Plotly.newPlot(div1, [{x: data_unique, type:'histogram'}], {title:title,  xaxis: {title: "Number of Sections"}, yaxis: {title: "Count"}, bargap:0.05});
+      Plotly.newPlot(div2, [{x: data_total, type:'histogram'}], {title:title,  xaxis: {title: "Number of Sections"}, yaxis: {title: "Count"}, bargap:0.05});
+
+
+      var table_data = [
+        {"Statistic": "Min", "Value": calcMin(data_unique)},
+        {"Statistic": "25th %", "Value": calcQuartile(data_unique, 25)},
+        {"Statistic": "Median", "Value": calcMedian(data_unique)},
+        {"Statistic": "75th %", "Value": calcQuartile(data_unique, 75)},
+        {"Statistic": "Max", "Value": calcMax(data_unique)},
+        {"Statistic": "Mean", "Value": Math.round(calcAverage(data_unique) * 100) / 100},
+        {"Statistic": "Mode", "Value": calcMode(data_unique)}
+
+      ];
+      tabulate(table_data, ["Statistic", "Value"], "#".concat(div1).concat("table"));
+
+      var table_data_2 = [
+        {"Statistic": "Min", "Value": calcMin(data_total)},
+        {"Statistic": "25th %", "Value": calcQuartile(data_total, 25)},
+        {"Statistic": "Median", "Value": calcMedian(data_total)},
+        {"Statistic": "75th %", "Value": calcQuartile(data_total, 75)},
+        {"Statistic": "Max", "Value": calcMax(data_total)},
+        {"Statistic": "Mean", "Value": Math.round(calcAverage(data_total) * 100) / 100},
+        {"Statistic": "Mode", "Value": calcMode(data_total)}
+
+      ];
+      tabulate(table_data_2, ["Statistic", "Value"], "#".concat(div2).concat("table"));
+
+    }
+
+
+   </script>
  </body>
