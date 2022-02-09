@@ -1,0 +1,6 @@
+song_name,total_chords,chords_in_key_sig,chords_not_in_key_sig,num_unique_chords,most_frequent_chords,tonic,tonic_frequency
+wham_last-christmas,33,33,0,3,ii,D,0
+a-ha_take-on-me,106,76,30,7,IV,Bm,0
+acdc_back-in-black,190,143,47,6,IV,E,0
+acdc_you-shook-me-all-night-long,108,108,0,3,I,G,0
+bon-jovi_livin-on-a-prayer,88,58,30,8,I,C,0

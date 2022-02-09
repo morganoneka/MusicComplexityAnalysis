@@ -57,7 +57,12 @@ def clean_chord_complex(chord):
 
 # get a dict of all the chords in the song and their occurrences
 def get_all_chords(chord_progression):
-    chords = [chord_progression[x]['chords'][1:-1] for x in chord_progression]
+    chords = [chord_progression[x]['chords'][1:-1] for x in chord_progression if x != "Tonic"]
+    chords = list(chain.from_iterable(chords))
+    return (Counter(chords))
+
+def get_all_chords_numeric(chord_progression):
+    chords = [chord_progression[x]['chords_numeric'][1:-1] for x in chord_progression if x != "Tonic"]
     chords = list(chain.from_iterable(chords))
     return (Counter(chords))
 
@@ -288,11 +293,13 @@ def get_count_stats(file_list):
             data = json.load(json_file)
             
             sections = [clean_region(data[x]['type'][1:-1]) for x in data]
+            sections.remove("Tonic")
             
             structure_dict['total_num_sections'].append(len(sections))
             structure_dict['num_unique_sections'].append(len(list(set(sections))))
     
     return (structure_dict)
+
 
 # obtain structure dict for a list of files\
 def get_chord_structure_dict(file_list):
@@ -308,24 +315,27 @@ def get_chord_structure_dict(file_list):
         # iterate over each section in a single song
         for key in data:
             
-            section = clean_region(data[key]['type'][1:-1])
+            # the last item in the chord dict states what the tonic is (not an actual section)
+            if key != "Tonic":
             
-            # if we haven't seen a section like this before, add a list for it 
-            if section not in structure_dict:
-                structure_dict[section] = {}
-            
-            # iterate over the list of chords
-            for i in range(len(data[key]['chords_numeric'])-1):
-                current_chord = data[key]['chords_numeric'][i]
-                next_chord = data[key]['chords_numeric'][i+1]
-                                
-                if current_chord not in structure_dict[section]:
-                    structure_dict[section][current_chord] = {}
-                    
-                if next_chord not in structure_dict[section][current_chord]:
-                    structure_dict[section][current_chord][next_chord] = 1
-                else:
-                    structure_dict[section][current_chord][next_chord] += 1
+                section = clean_region(data[key]['type'][1:-1])
+
+                # if we haven't seen a section like this before, add a list for it 
+                if section not in structure_dict:
+                    structure_dict[section] = {}
+
+                # iterate over the list of chords
+                for i in range(len(data[key]['chords_numeric'])-1):
+                    current_chord = data[key]['chords_numeric'][i]
+                    next_chord = data[key]['chords_numeric'][i+1]
+
+                    if current_chord not in structure_dict[section]:
+                        structure_dict[section][current_chord] = {}
+
+                    if next_chord not in structure_dict[section][current_chord]:
+                        structure_dict[section][current_chord][next_chord] = 1
+                    else:
+                        structure_dict[section][current_chord][next_chord] += 1
                 
     return (structure_dict)
 

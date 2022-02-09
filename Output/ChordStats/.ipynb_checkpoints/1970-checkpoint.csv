@@ -1,0 +1,11 @@
+song_name,total_chords,chords_in_key_sig,chords_not_in_key_sig,num_unique_chords,most_frequent_chords,tonic_frequency
+john-lennon_happy-xmas-war-is-over,35,19,16,6,II,0
+acdc_highway-to-hell,210,173,37,3,IV,0
+acdc_tnt,135,72,63,3,#VI,0
+aerosmith_dream-on,85,58,27,10,vi,0
+alice-cooper_poison,142,105,37,11,I,0
+america_a-horse-with-no-name,58,58,0,2,i,0
+america_sister-golden-hair,64,64,0,6,IV,0
+america_ventura-highway,13,7,6,2,i,0
+bee-gees_how-deep-is-your-love,76,47,29,11,ii,0
+bee-gees_more-than-a-woman,22,19,3,5,VI,0
