@@ -29,10 +29,158 @@
    </div>
 
    <div class="row">
+    <h2>Proportion of chords not in key signature</h2>
+   </div>
+
+   <div class="row">
+     <div class="col-md-4"><p>Out of key signature stuff</p> </div>
+      <div class="col-md-4">
+        <div id="ooks70s"></div>
+        <div id="ooks70stable"></div>
+      </div>
+      <div class="col-md-4">
+        <div id="ooks80s"></div>
+        <div id="ooks80stable"></div>
+      </div>
+   </div>
+
+
+   <div class="row">
+     <div class="col-md-4">
+       <div id="ooks90s"></div>
+       <div id="ooks90stable"></div>
+     </div><div class="col-md-4">
+       <div id="ooks00s"></div>
+       <div id="ooks00stable"></div>
+     </div><div class="col-md-4">
+       <div id="ooks10s"></div>
+       <div id="ooks10stable"></div>
+     </div>
+   </div>
+
+   <div class="row">
+    <h2>Proportion of songs in minor key</h2>
+   </div>
+
+   <div class="row">
+     <div class="col-md-4"><p>XXX</p> </div>
+      <div class="col-md-4">
+        <div id="minor70s"></div>
+        <div id="minor70stable"></div>
+      </div>
+      <div class="col-md-4">
+        <div id="minor80s"></div>
+        <div id="minor80stable"></div>
+      </div>
+   </div>
+
+
+   <div class="row">
+     <div class="col-md-4">
+       <div id="minor90s"></div>
+       <div id="minor90stable"></div>
+     </div><div class="col-md-4">
+       <div id="minor00s"></div>
+       <div id="minor00stable"></div>
+     </div><div class="col-md-4">
+       <div id="minor10s"></div>
+       <div id="minor10stable"></div>
+     </div>
+   </div>
+
+   <div class="row">
+    <h2>Proportion of songs where tonic is top chord</h2>
+   </div>
+
+   <div class="row">
+     <div class="col-md-4"><p>XXXX</p> </div>
+      <div class="col-md-4">
+        <div id="tonictop70s"></div>
+        <div id="tonictop70stable"></div>
+      </div>
+      <div class="col-md-4">
+        <div id="tonictop80s"></div>
+        <div id="tonictop80stable"></div>
+      </div>
+   </div>
+
+
+   <div class="row">
+     <div class="col-md-4">
+       <div id="tonictop90s"></div>
+       <div id="tonictop90stable"></div>
+     </div><div class="col-md-4">
+       <div id="tonictop00s"></div>
+       <div id="tonictop00stable"></div>
+     </div><div class="col-md-4">
+       <div id="tonictop10s"></div>
+       <div id="tonictop10stable"></div>
+     </div>
+   </div>
+
+   <div class="row">
      <div class="col-sm-12">
      <p><h1>Conclusions</h1></p>
      <p>Are there major differences?</p>
    </div>
   </div>
    </div>
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   <script src="https://d3js.org/d3.v4.js"></script>
+   <script src="https://d3js.org/d3-array.v2.min.js"></script>
+   <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+
+
+   <script>
+   var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv?token=GHSAT0AAAAAABRG7LRVSR3ETXS4HM32W7UAYQNLGLA", function(data){createCharts(data, "ooks70s", "minor70s", "tonictop70s", title="1970s")});
+
+   var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv?token=GHSAT0AAAAAABRG7LRUE4TINRZJR6PX5RBUYQNLGRQ", function(data){createCharts(data, "ooks80s", "minor80s","tonictop80s", title="1980s")});
+
+   var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv?token=GHSAT0AAAAAABRG7LRVAAU5QW3RRBSZUV4WYQNLGZA", function(data){createCharts(data, "ooks90s", "minor90s","tonictop90s", title="1990s")});
+
+   var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv?token=GHSAT0AAAAAABRG7LRVKTNTKR3BCGPISNEGYQNLHCA", function(data){createCharts(data, "ooks00s", "minor00s","tonictop00s", title="2000s")});
+
+   var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv?token=GHSAT0AAAAAABRG7LRUECFTIGBLDGRKTTZOYQNLHIQ", function(data){createCharts(data, "ooks10s", "minor10s","tonictop10s", title="2010s")});
+
+   function createCharts(allRows, div1, div2, div3, title){
+     console.log(allRows);
+
+     var data_ooks = [];
+     data_minor_yes = 0;
+     data_minor_no = 0;
+     tonic_top_yes = 0;
+     tonic_top_no = 0;
+     tonic="I"
+     for (var i = 0; i<allRows.length; i++){
+       data_ooks.push(parseInt(allRows[i].chords_not_in_key_sig) / parseInt(allRows[i].total_chords));
+
+
+       if (allRows[i].tonic.endsWith("m")){
+         data_minor_yes ++;
+         tonic="i";
+       } else{
+         data_minor_no ++;
+       }
+
+       console.log(allRows[i].most_frequent_chords.split(','));
+       console.log(allRows[i].tonic)
+
+       if (allRows[i].most_frequent_chords.split(',').includes(tonic)){
+         tonic_top_yes ++;
+       } else{
+         tonic_top_no ++;
+       }
+     }
+
+     Plotly.newPlot(div1, [{x: data_ooks, type:'histogram'}], {title:title,  xaxis: {title: "Proportion of chords not in key signature"}, yaxis: {title: "Count"}, bargap:0.05, xaxis: {range: [0, 1]}});
+
+     Plotly.newPlot(div2, [{values: [data_minor_yes, data_minor_no], labels: ['In Minor Key','Not In Minor Key'], type:'pie'}]);
+
+     Plotly.newPlot(div3, [{values: [tonic_top_yes, tonic_top_no], labels: ['Tonic is Top Chord','Tonic is not Top Chord'], type:'pie'}]);
+
+
+   }
+   </script>
  </body>
