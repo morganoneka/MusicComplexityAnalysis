@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<style>
+
+</style>
+
+<body>
+  <div class="jumbotron text-center">
+   <h1>Data</h1>
+   <p>Let's take a peek at te data shall we?</p>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12" id="tabletabs">
+        <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active d1970s" onclick="update_table(this);event.preventDefault();" href="#">1970s</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d1980s" onclick="update_table(this);event.preventDefault();" href="#">1980s</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d1990s" onclick="update_table(this);event.preventDefault();" href="#">1990s</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d2000s" onclick="update_table(this);event.preventDefault();" href="#">2000s</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d2010s" onclick="update_table(this);event.preventDefault();" href="#">2010s</a>
+        </li>
+      </ul>
+      </div>
+    </div>
+    <div class="row">
+       <div class="col-sm-12"style="height: 300px;">
+         <div id="songtable" class="mh-100" style="overflow:auto">
+         </div>
+       </div>
+     </div>
+    <div class="row">
+      <div class="col-sm-12">
+      <p><h1>Conclusions</h1></p>
+      <p>Are there major differences?</p>
+    </div>
+   </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="https://d3js.org/d3-array.v2.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+  <script>
+    update_table('1970s');
+    function update_table(button){
+      current_page = ""
+      if (typeof button === 'string' || button instanceof String){
+        current_page = button
+      } else{
+        current_page = button.text;
+        d3.select('#tabletabs').selectAll('a').classed('active', false);
+        c = d3.select('#tabletabs').select('.d'.concat(current_page));
+        c.classed('active', true);
+      }
+
+      var datafile = "";
+      switch(current_page){
+        case '1970s':
+          datafile="https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv?token=GHSAT0AAAAAABRTQAMBDHJDFIH77GKAJOK2YQWL7WA";
+          break;
+        case '1980s':
+          datafile="https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv?token=GHSAT0AAAAAABRTQAMAW2MKG7GOYC6FVVH6YQWMSXA";
+          break;
+        case '1990s':
+          datafile="https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv?token=GHSAT0AAAAAABRTQAMB3PKBFB5VJP5UTLXUYQWMTTQ";
+          break;
+        case '2000s':
+          datafile="https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv?token=GHSAT0AAAAAABRTQAMB3LQ72FSBY46T7NU2YQWMULA";
+          break;
+        case '2010s':
+          datafile="https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv?token=GHSAT0AAAAAABRTQAMA222TQWQ2MD6UKB2SYQWMUVA";
+          break;
+      }
+      d3.csv(datafile, function(data){process_data(data)});
+    }
+
+    function process_data(data){
+      for (i=0; i < data.length; i++){
+        data[i].Artist = data[i].song_name.split("_")[0].split("-").join(" ");
+        data[i].Title = data[i].song_name.split("_")[1].split("-").join(" ");
+      }
+
+      data = data.sort(function(a,b){
+        if (a.Artist > b.Artist){
+          return 1;
+        } else if (a.Artist < b.Artist){
+          return -1;
+        } else{return 0;}
+      });
+
+      display_table(data);
+    }
+
+    function display_table(data){
+      var columns = ['Artist','Title'];
+
+      d3.select('#songtable').select('table').remove();
+      var table = d3.select('#songtable').append('table').attr('class','table table-striped');
+      var thead = table.append('thead').attr('class','thead-mine')
+      var	tbody = table.append('tbody');
+
+      // append the header row
+      thead.append('tr')
+        .selectAll('th')
+        .data(columns).enter()
+        .append('th')
+          .text(function (column) { return column; });
+
+
+      // create a row for each object in the data
+      var rows = tbody.selectAll('tr')
+        .data(data)
+        .enter()
+        .append('tr');
+
+      // create a cell in each row for each column
+      var cells = rows.selectAll('td')
+        .data(function (row) {
+          return columns.map(function (column) {
+            return {column: column, value: row[column]};
+          });
+        })
+        .enter()
+        .append('td')
+          .text(function (d) { return d.value; });
+
+      return table;
+    }
+    </script>
+</body>
