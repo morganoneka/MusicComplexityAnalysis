@@ -1,8 +1,13 @@
 <!DOCTYPE html>
+<html lang="en">
+
 <meta charset="utf-8">
 
 <head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <style>
@@ -10,55 +15,39 @@
 </style>
 
 <body>
-  <div class="jumbotron text-center">
-   <h1>Music Structure Analysis</h1>
-   <p>How much does musical structure vary across time and genre?</p>
+  <div class="" id="nav-placeholder">
+
   </div>
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navigation</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="vis_chords.html">Chord Progression</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="vis_structure.html">Song Structure</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
 
   <div class="container">
    <div class="row">
      <div class="col-sm-12">
-       (very cool attention-grabbing visualization here)
-
        <h2>Introduction</h2>
        <p>People like to dunk on "music these days", claiming it is too simple and watered down, but how much has popular music actually changed over time? I used data from Ultimate Guitar to quantify song structure and chord progression, then used this data to compare differences.</p>
 
 
        <h3>Song measures</h3>
        <ul>
-         <li><b>Structure:</b> the different regions a song has, and how the song moves between them. The most basic and popular structure is Verse/Chorus/Verse/Chorus/Bridge/Chorus. </li>
-         <li><b>Chord Progression:</b> the order the chords are played in. The most common chord progression in pop music is I V vi IV - in C major, this would be C G Am F.</li>
+         <li><b>Structure:</b> the different regions a song has, and how the song moves between them. One common song structure is Verse/Chorus/Verse/Chorus/Bridge/Chorus. </li>
+         <li><b>Chord Progression:</b> the order the chords are played in. A common chord progression in pop music is I V vi IV - in C major, this would be C G Am F.</li>
        </ul>
 
-       <h3>Web Scraping Process</h3>
-       <p>(insert text here)</p>
+       <h3>Data Acquisition Process</h3>
+       <p>Chord and structure information was scraped from Ultimate Guitar using the Beautiful Soup library. Additional information about song genre was scraped from Last.Fm.  </p>
+       <p>The detailed process for obtaining, parsing, and manipulating the data can be found in Jupyer notebooks on <a href="https://github.com/morganoneka/UltimateGuitarAnalysis">GitHub</a>.</p>
 
        <h3>Limitations</h3>
        <ul>
-         <li><b>Not all data on Ultimate Guitar is completely accurate.</b> More popular tabs tend to be more accurate, but it's likely that some of the data in this set is not correct.</li>
+         <li><b>Not all data on Ultimate Guitar is completely accurate.</b> More popular tabs tend to be more accurate, as many people have seen  them and been able to add changes, but it's likely that some of the data in this set is not correct.</li>
          <li><b>Song data was procured based on the song's popularity on Ultimate Guitar rather than its actual popularity during the time it came out.</b> It may not be the <i>best</i> representation of a decade's popular music, however one could argue that a decade's most popular songs tend to be the ones people still care about years later.</li>
          <li><b>Finding the tonic chord is not always so easy.</b> This analysis uses roman numeral notation to allow for comparison across songs with different keys, however not all songs list their key on Ultimate Guitar. For these songs, the tonic chord is inferred to be whichever chord would be the "best fit", but it may not always be correct.</li>
          </ul>
      </div>
+
+     <script>
+     $(function(){
+     $("#nav-placeholder").load("nav.html");
+     });
+     </script>
 </body>
+</html>

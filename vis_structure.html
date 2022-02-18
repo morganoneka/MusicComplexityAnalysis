@@ -2,7 +2,10 @@
 <meta charset="utf-8">
 
 <head>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <style>
@@ -10,30 +13,26 @@
 </style>
 
 <body>
-  <div class="jumbotron text-center">
-   <h1>Music Structure Analysis</h1>
-   <p>How much does musical structure vary across time and genre?</p>
+  <div class="" id="nav-placeholder">
+
   </div>
 
   <div class="container">
-   <div class="row">
-     <div class="col-sm-12">
-     <ul>
-      <li>Histogram with total number of sections, then number of unique sections. </li>
-
-      <li>Average deviation from the "Verse/Chorus/Verse/Chorus/Bridge/Chorus" structure as measured by something</li>
-      <li>How many songs start with a chorus? Do any songs not have a chorus? How many songs have solos? </li>
-      <li>How much does structure differ among songs by the same artist?</li>
-      </ul>
-     </div>
-   </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Structural Variation</h1>
+        <p>Most modern music can be described as a composition of common parts: chorus, verse, intro or outro, bridge, solo, etc. Songs with more unique parts are clearly more complex than songs with fewer unique parts.</p>
+      </div>
+    </div>
 
    <div class="row">
     <h2>Number of unique sections</h2>
    </div>
 
    <div class="row">
-     <div class="col-md-4"><p>Sections in a song include a verse, chorus, bridge, outro, intro, solo, instrumental, etc. Some songs are very simple, including just verses and a repeating chorus. Others may include multiple different sections in addition to these staple sections. Thus, the number of unique sections is a measure of complexity.</p> </div>
+     <div class="col-md-4"><p>Sections in a song include a verse, chorus, bridge, outro, intro, solo, instrumental, etc. Some songs are very simple, including just verses and a repeating chorus. Others may include multiple different sections in addition to these staple sections. Thus, the number of unique sections is a measure of complexity.</p>
+
+     <p>We can see that the number of unique sections actutally appears to have slightly increased over time.</p></div>
       <div class="col-md-4">
         <div id="unique70s"></div>
         <div id="unique70stable"></div>
@@ -65,7 +64,10 @@
    </div>
 
    <div class="row">
-     <div class="col-md-4"></div>
+     <div class="col-md-4">
+       <p>Most sections are designed to be repeated more than once, most notably the chorus. Here, we look at how many sections a song has when repeated sections are included.</p>
+       <p>Total number of sections appears to have remained stagnant over the last 50 years, indicating that modern music is essentially made from the same number of pieces, so to speak, but that there is slightly more variety in the kinds of pieces it's built from. </p>
+     </div>
      <div class="col-md-4">
        <div id="total70s"></div>
        <div id="total70stable"></div>
@@ -99,7 +101,6 @@
   </div>
    </div>
 
-   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
    <script src="https://d3js.org/d3.v4.js"></script>
@@ -183,15 +184,15 @@
        return ary;
    }
 
-    var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1970_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRULEUDD7NAT5RD3HHUYQKW6RQ", function(data){createCharts(data, "unique70s", "total70s", title="1970s")});
+    var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1970_distribution_stats.csv", function(data){createCharts(data, "unique70s", "total70s", title="1970s")});
 
-    var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1980_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRUJVPTLW3Z2Q5UUQ5IYQKXRZA", function(data){createCharts(data, "unique80s", "total80s", title="1980s")});
+    var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1980_distribution_stats.csv", function(data){createCharts(data, "unique80s", "total80s", title="1980s")});
 
-    var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1990_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRU4TJ4FFAEEA3UPFMGYQKXTNQ", function(data){createCharts(data, "unique90s", "total90s", title="1990s")});
+    var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1990_distribution_stats.csv", function(data){createCharts(data, "unique90s", "total90s", title="1990s")});
 
-    var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2000_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRULHS4EVZC2B3IGGPQYQKYCRA", function(data){createCharts(data, "unique00s", "total00s", title="2000s")});
+    var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2000_distribution_stats.csv", function(data){createCharts(data, "unique00s", "total00s", title="2000s")});
 
-    var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2010_distribution_stats.csv?token=GHSAT0AAAAAABRG7LRUB37MOBH2SWEI6SWCYQKX3LQ", function(data){createCharts(data, "unique10s", "total10s", title="2010s")});
+    var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2010_distribution_stats.csv", function(data){createCharts(data, "unique10s", "total10s", title="2010s")});
 
     function tabulate(data, columns, divname) {
       var table = d3.select(divname).append('table').attr('class','table')
@@ -271,5 +272,10 @@
     }
 
 
+   </script>
+   <script>
+   $(function(){
+   $("#nav-placeholder").load("nav.html");
+   });
    </script>
  </body>

@@ -3,6 +3,9 @@
 
 <head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <style>
@@ -10,12 +13,13 @@
 </style>
 
 <body>
-  <div class="jumbotron text-center">
-   <h1>Data</h1>
-   <p>Let's take a peek at te data shall we?</p>
+  <div class="" id="nav-placeholder">
+
   </div>
 
   <div class="container">
+    <div class="row">
+      <div class="col-sm-12"><h2>Song List</h2><p>What music was used for this analysis?</p></div></div>
     <div class="row">
       <div class="col-sm-12" id="tabletabs">
         <ul class="nav nav-tabs">
@@ -43,14 +47,47 @@
          </div>
        </div>
      </div>
-    <div class="row">
-      <div class="col-sm-12">
-      <p><h1>Conclusions</h1></p>
-      <p>Are there major differences?</p>
-    </div>
-   </div>
+
+     <div class="row">
+       <div class="col-md-12">
+
+      <h2>Genre Breakdown</h2>
+      </div>
+     </div>
+
+     <div class="row">
+       <div class="col-lg-6">
+         Genre data was scraped from Last.Fm. Important note: most songs were labeled with more than one tag (i.e. a song could be labeled as both pop and rock).
+       </div>
+       <div class="col-lg-6">
+         <div id="genre70s"></div>
+         <div id="genre70stable"></div>
+       </div>
+
+     </div>
+
+     <div class="row">
+       <div class="col-lg-6">
+         <div id="genre80s"></div>
+         <div id="genre80stable"></div>
+       </div>
+
+       <div class="col-lg-6">
+         <div id="genre90s"></div>
+         <div id="genre90stable"></div>
+       </div>
+       </div>
+
+     <div class="row" >
+       <div class="col-lg-6">
+         <div id="genre00s"></div>
+         <div id="genre00stable"></div>
+       </div><div class="col-lg-6">
+         <div id="genre10s"></div>
+         <div id="genre10stable"></div>
+       </div>
+     </div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="https://d3js.org/d3.v4.js"></script>
@@ -58,6 +95,13 @@
   <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
   <script>
     update_table('1970s');
+
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1970.csv?token=GHSAT0AAAAAABRTQAMAPFAISACFXUVD2M34YQWRH7Q", function(data){   make_genre_piechart(data, title="70s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1980.csv?token=GHSAT0AAAAAABRTQAMAE47KNZEVT44RMSMGYQWRLZQ", function(data){   make_genre_piechart(data, title="80s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1990.csv?token=GHSAT0AAAAAABRTQAMBYNOHWBI5QL7DBGN2YQWRN3Q", function(data){   make_genre_piechart(data, title="90s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/2000.csv?token=GHSAT0AAAAAABRTQAMA35VE64IIRJVRESTSYQWROMA", function(data){   make_genre_piechart(data, title="00s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/2010.csv?token=GHSAT0AAAAAABRTQAMAVHFYLY4LU2P3KGSCYQWROWQ", function(data){   make_genre_piechart(data, title="10s")});
+
     function update_table(button){
       current_page = ""
       if (typeof button === 'string' || button instanceof String){
@@ -142,5 +186,29 @@
 
       return table;
     }
+
+    function make_genre_piechart(data, title){
+      genre_names = [];
+      genre_counts = [];
+      for (var i =0; i<data.length; i++){
+          gc = parseInt(data[i].Count);
+          matches = data[i].Genre.match(/\d+/g);
+          if (gc > 15 & matches==null & data[i].Genre != ""){
+            genre_names.push(data[i].Genre);
+            genre_counts.push(gc);
+          }
+      }
+      var layout = {xaxis: {
+        title:{'text':"19".concat(title)},
+    tickangle: -45
+
+  }};
+        Plotly.newPlot('genre'.concat(title), [{y: genre_counts, x: genre_names, type:'bar'}], layout);
+    }
+    </script>
+    <script>
+    $(function(){
+    $("#nav-placeholder").load("nav.html");
+    });
     </script>
 </body>

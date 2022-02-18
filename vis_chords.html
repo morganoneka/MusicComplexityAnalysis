@@ -3,6 +3,9 @@
 
 <head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <style>
@@ -10,30 +13,28 @@
 </style>
 
 <body>
-  <div class="jumbotron text-center">
-   <h1>Music Structure Analysis</h1>
-   <p>How much does musical structure vary across time and genre?</p>
+  <div class="" id="nav-placeholder">
+
   </div>
 
   <div class="container">
    <div class="row">
-     <div class="col-sm-12">
-     <ul>
-      <li>Histogram how many different chords each song has </li>
-      <li>How many songs have chords that are outside of the key signature? </li>
-      <li>How many songs contain the classic I V vi IV progression? How much of each song is accounted for by this progression? (Note: repeats will count. So I V V vi IV would count)</li>
-      <li>How much do chord progressions differ between sections? i.e. are the chorus and bridge very different or not?</li>
-      <li>How much do chord progressions differ among songs by the same artist?</li>
-      </ul>
+     <div class="col-md-12">
+       <h1>Chord Progression</h1>
+       <p>While instrumentation varies greatly across music, the big-picture musical structure of a song can be described by its succession of chords. </p>
      </div>
    </div>
 
    <div class="row">
-    <h2>UniqueChords</h2>
+     <div class="col-md-12">
+       <h2>Unique Chords</h2>
+    </div>
    </div>
 
    <div class="row">
-     <div class="col-md-4"><p>XXX</p> </div>
+     <div class="col-md-4"><p>This metric is simple: the more chords a song has, the more complex the chord progression. Some songs take a minimalist approach, creating an entire 3+ minute song with only one or two chords, creating variation in other ways. Other songs use not only the seven songs in the key signature, but other "borrowed" chords as well, making the song more complicated.</p>
+
+     <p>Looking at the mean and median number of unique chords, it appears as though the number of unique chords has lowered slightly over time, indicating that modern music uses a slightly smaller set of chords on average.</p> </div>
       <div class="col-md-4">
         <div id="uniquechords70s"></div>
         <div id="uniquechords70stable"></div>
@@ -59,11 +60,13 @@
    </div>
 
    <div class="row">
-    <h2>Proportion of chords not in key signature</h2>
+     <div class="col-md-12">
+       <h2>Proportion of chords not in the key signature</h2>
+    </div>
    </div>
 
    <div class="row">
-     <div class="col-md-4"><p>A key signature has seven chords that "belong" to that key signature. Including chords that are outside a given key signature adds color and drama to a song. Studying these histograms, we can clearly see that over time, musicians have been less inclined to include out-of-key-signature chords.</p> </div>
+     <div class="col-md-4"><p>A key signature has seven chords that "belong" to that key signature. Including chords that are outside a given key signature adds color and drama to a song. Studying these histograms, we can clearly see that over time, musicians have become less inclined to include out-of-key-signature chords.</p> </div>
       <div class="col-md-4">
         <div id="ooks70s"></div>
         <div id="ooks70stable"></div>
@@ -89,11 +92,13 @@
    </div>
 
    <div class="row">
-    <h2>Proportion of songs in minor key</h2>
+     <div class="col-md-12">
+       <h2>Proportion of Songs in a Minor Key</h2>
+    </div>
    </div>
 
    <div class="row">
-     <div class="col-md-4"><p>Music in a minor key is often considered sad.</p> </div>
+     <div class="col-md-4"><p>Music in a minor key is often considered sad, and tends to not be used as much in popular music.</p> </div>
       <div class="col-md-4">
         <div id="minor70s"></div>
         <div id="minor70stable"></div>
@@ -119,11 +124,14 @@
    </div>
 
    <div class="row">
-    <h2>Proportion of songs where tonic is top chord</h2>
+     <div class="col-md-12">
+       <h2>Proportion of Songs Where Tonic is the Top Chord</h2>
+
+    </div>
    </div>
 
    <div class="row">
-     <div class="col-md-4"><p>XXXX</p> </div>
+     <div class="col-md-4"> <p>The tonic is the chord that makes the song sound resolved; colloquially, it is the chord that sounds like "home" inside the song. Often, the tonic chord is the same as the key signature we're in, but not always. Music where the tonic is not frequently used have a feeling of being unresolved. </p> </div>
       <div class="col-md-4">
         <div id="tonictop70s"></div>
         <div id="tonictop70stable"></div>
@@ -153,11 +161,11 @@
    <div class="row">
      <div class="col-sm-12">
      <p><h1>Conclusions</h1></p>
-     <p>Are there major differences?</p>
+     <p>Based on chord-based metrics, it appears as though music has gotten slighty simpler over time. </p>
    </div>
   </div>
    </div>
-   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
    <script src="https://d3js.org/d3.v4.js"></script>
@@ -166,15 +174,15 @@
 
 
    <script>
-   var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv?token=GHSAT0AAAAAABRG7LRVSR3ETXS4HM32W7UAYQNLGLA", function(data){createCharts(data,  title="70s")});
+   var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv", function(data){createCharts(data,  title="70s")});
 
-   var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv?token=GHSAT0AAAAAABRG7LRUE4TINRZJR6PX5RBUYQNLGRQ", function(data){createCharts(data, title="80s")});
+   var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv", function(data){createCharts(data, title="80s")});
 
-   var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv?token=GHSAT0AAAAAABRG7LRVAAU5QW3RRBSZUV4WYQNLGZA", function(data){createCharts(data, title="90s")});
+   var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv", function(data){createCharts(data, title="90s")});
 
-   var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv?token=GHSAT0AAAAAABRG7LRVKTNTKR3BCGPISNEGYQNLHCA", function(data){createCharts(data, title="00s")});
+   var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv", function(data){createCharts(data, title="00s")});
 
-   var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv?token=GHSAT0AAAAAABRG7LRUECFTIGBLDGRKTTZOYQNLHIQ", function(data){createCharts(data, title="10s")});
+   var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv", function(data){createCharts(data, title="10s")});
 
    // https://snippets.bentasker.co.uk/page-1907020841-Calculating-Mean,-Median,-Mode,-Range-and-Percentiles-with-Javascript-Javascript.html
 
@@ -347,5 +355,10 @@
    function createCharts2(){
 
    }
+   </script>
+   <script>
+   $(function(){
+   $("#nav-placeholder").load("nav.html");
+   });
    </script>
  </body>
