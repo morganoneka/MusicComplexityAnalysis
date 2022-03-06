@@ -25,340 +25,234 @@
      </div>
    </div>
 
-   <div class="row">
-     <div class="col-md-12">
-       <h2>Unique Chords</h2>
-    </div>
-   </div>
+   <div class="row"><div class="col-md-12"><h2>Total Number Chords</h2><p>Explanation</p></div></div>
+   <div class="row"><div class="col-md-12" id="totalChordsChart"></div></div>
+<div class="row"><div class="col-md-12"><h2>Number of Unique Chords</h2><p>This metric is simple: the more chords a song has, the more complex the chord progression. Some songs take a minimalist approach, creating an entire 3+ minute song with only one or two chords, creating variation in other ways. Other songs use not only the seven songs in the key signature, but other "borrowed" chords as well, making the song more complicated.</p>
 
-   <div class="row">
-     <div class="col-md-4"><p>This metric is simple: the more chords a song has, the more complex the chord progression. Some songs take a minimalist approach, creating an entire 3+ minute song with only one or two chords, creating variation in other ways. Other songs use not only the seven songs in the key signature, but other "borrowed" chords as well, making the song more complicated.</p>
+<p>Looking at the mean and median number of unique chords, it appears as though the number of unique chords has lowered slightly over time, indicating that modern music uses a slightly smaller set of chords on average.</p> </div></div>
+   <div class="row"><div class="col-md-12" id="uniqueChordsChart"></div></div>
+<div class="row"><div class="col-md-12"><h2>Proportion of chords not in the key signature</h2><p>A key signature has seven chords that "belong" to that key signature. Including chords that are outside a given key signature adds color and drama to a song. Studying these histograms, we can clearly see that over time, musicians have become less inclined to include out-of-key-signature chords.</p></div></div>
+   <div class="row"><div class="col-md-12" id="inKeySigChart"></div></div>
 
-     <p>Looking at the mean and median number of unique chords, it appears as though the number of unique chords has lowered slightly over time, indicating that modern music uses a slightly smaller set of chords on average.</p> </div>
-      <div class="col-md-4">
-        <div id="uniquechords70s"></div>
-        <div id="uniquechords70stable"></div>
-      </div>
-      <div class="col-md-4">
-        <div id="uniquechords80s"></div>
-        <div id="uniquechords80stable"></div>
-      </div>
-   </div>
+ </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+ <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+ <!-- <script src="https://d3js.org/d3-array.v2.min.js"></script> -->
+ <script src="https://d3js.org/d3.v5.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</script>
+<script>
 
+// https://snippets.bentasker.co.uk/page-1907020841-Calculating-Mean,-Median,-Mode,-Range-and-Percentiles-with-Javascript-Javascript.html
 
-   <div class="row">
-     <div class="col-md-4">
-       <div id="uniquechords90s"></div>
-       <div id="uniquechords90stable"></div>
-     </div><div class="col-md-4">
-       <div id="uniquechords00s"></div>
-       <div id="uniquechords00stable"></div>
-     </div><div class="col-md-4">
-       <div id="uniquechords10s"></div>
-       <div id="uniquechords10stable"></div>
-     </div>
-   </div>
+function calcAverage(arr){
+    var a = arr.slice();
+    if (a.length){
+        sum = sumArr(a);
+        avg = sum / a.length;
+        return avg;
+    }
+    return false;
+}
+function calcMax(arr){
+    return Math.max(...arr);
+}
+function calcMedian(arr){
+        var a = arr.slice();
+        hf = Math.floor(a.length/2);
+        arr = sortArr(a);
+        if (a.length % 2){
+            return arr[hf];
+        }else{
+            return (parseFloat(arr[hf-1]) + parseFloat(arr[hf])) / 2.0;
+        }
 
-   <div class="row">
-     <div class="col-md-12">
-       <h2>Proportion of chords not in the key signature</h2>
-    </div>
-   </div>
+}
+function calcMin(arr){
+    return Math.min(...arr);
+}
+function calcMode(arr){
+    var ary = arr.slice();
+    t = ary.sort(function(a,b){
+        ary.filter(function(val){
+            val===a
+        }).length - ary.filter(function(val){
+            val===b
+        }).length});
+    return t.pop();
+}
+function calcQuartile(arr,q){
+    var a = arr.slice();
+    // Turn q into a decimal (e.g. 95 becomes 0.95)
+    q = q/100;
 
-   <div class="row">
-     <div class="col-md-4"><p>A key signature has seven chords that "belong" to that key signature. Including chords that are outside a given key signature adds color and drama to a song. Studying these histograms, we can clearly see that over time, musicians have become less inclined to include out-of-key-signature chords.</p> </div>
-      <div class="col-md-4">
-        <div id="ooks70s"></div>
-        <div id="ooks70stable"></div>
-      </div>
-      <div class="col-md-4">
-        <div id="ooks80s"></div>
-        <div id="ooks80stable"></div>
-      </div>
-   </div>
+    // Sort the array into ascending order
+    data = sortArr(a);
 
+    // Work out the position in the array of the percentile point
+    var p = ((data.length) - 1) * q;
+    var b = Math.floor(p);
 
-   <div class="row">
-     <div class="col-md-4">
-       <div id="ooks90s"></div>
-       <div id="ooks90stable"></div>
-     </div><div class="col-md-4">
-       <div id="ooks00s"></div>
-       <div id="ooks00stable"></div>
-     </div><div class="col-md-4">
-       <div id="ooks10s"></div>
-       <div id="ooks10stable"></div>
-     </div>
-   </div>
+    // Work out what we rounded off (if anything)
+    var remainder = p - b;
 
-   <div class="row">
-     <div class="col-md-12">
-       <h2>Proportion of Songs in a Minor Key</h2>
-    </div>
-   </div>
+    // See whether that data exists directly
+    if (data[b+1]!==undefined){
+        return parseFloat(data[b]) + remainder * (parseFloat(data[b+1]) - parseFloat(data[b]));
+    }else{
+        return parseFloat(data[b]);
+    }
+}
+function calcRange(arr){
+    mx = calcMax(arr);
+    mn = calcMin(arr);
+    return mx-mn;
+}
+function sumArr(arr){
+    var a = arr.slice();
+    return a.reduce(function(a, b) { return parseFloat(a) + parseFloat(b); });
+}
+function sortArr(arr){
+    var ary = arr.slice();
+    ary.sort(function(a,b){ return parseFloat(a) - parseFloat(b);});
+    return ary;
+}
 
-   <div class="row">
-     <div class="col-md-4"><p>Music in a minor key is often considered sad, and tends to not be used as much in popular music.</p> </div>
-      <div class="col-md-4">
-        <div id="minor70s"></div>
-        <div id="minor70stable"></div>
-      </div>
-      <div class="col-md-4">
-        <div id="minor80s"></div>
-        <div id="minor80stable"></div>
-      </div>
-   </div>
+function fiveNumberSummary(data){
+  return([calcMin(data), calcQuartile(data, 25), calcMedian(data), calcQuartile(data,75), calcMax(data)])
+}
 
+Promise.all([
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv"),
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv"),
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv"),
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv"),
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv")
+]).then(function(files) {
+    // files[0] will contain file1.csv
+    // files[1] will contain file2.csv
+    console.log(files[0]);
+    totalChords(files);
+    uniqueChords(files);
+    inKeySignature(files);
 
-   <div class="row">
-     <div class="col-md-4">
-       <div id="minor90s"></div>
-       <div id="minor90stable"></div>
-     </div><div class="col-md-4">
-       <div id="minor00s"></div>
-       <div id="minor00stable"></div>
-     </div><div class="col-md-4">
-       <div id="minor10s"></div>
-       <div id="minor10stable"></div>
-     </div>
-   </div>
-
-   <div class="row">
-     <div class="col-md-12">
-       <h2>Proportion of Songs Where Tonic is the Top Chord</h2>
-
-    </div>
-   </div>
-
-   <div class="row">
-     <div class="col-md-4"> <p>The tonic is the chord that makes the song sound resolved; colloquially, it is the chord that sounds like "home" inside the song. Often, the tonic chord is the same as the key signature we're in, but not always. Music where the tonic is not frequently used have a feeling of being unresolved. </p> </div>
-      <div class="col-md-4">
-        <div id="tonictop70s"></div>
-        <div id="tonictop70stable"></div>
-      </div>
-      <div class="col-md-4">
-        <div id="tonictop80s"></div>
-        <div id="tonictop80stable"></div>
-      </div>
-   </div>
-
-
-   <div class="row">
-     <div class="col-md-4">
-       <div id="tonictop90s"></div>
-       <div id="tonictop90stable"></div>
-     </div><div class="col-md-4">
-       <div id="tonictop00s"></div>
-       <div id="tonictop00stable"></div>
-     </div><div class="col-md-4">
-       <div id="tonictop10s"></div>
-       <div id="tonictop10stable"></div>
-     </div>
-   </div>
+}).catch(function(err) {
+    // handle error here
+    console.log(err)
+})
 
 
+function totalChords(files){
+  data = [
+    {x:'1970s', y:fiveNumberSummary(files[0].map(a => parseInt(a.total_chords)))},
+    {x:'1980s', y:fiveNumberSummary(files[1].map(a => parseInt(a.total_chords)))},
+    {x:'1990s', y:fiveNumberSummary(files[2].map(a => parseInt(a.total_chords)))},
+    {x:'2000s', y:fiveNumberSummary(files[3].map(a => parseInt(a.total_chords)))},
+    {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.total_chords)))}];
 
-   <div class="row">
-     <div class="col-sm-12">
-     <p><h1>Conclusions</h1></p>
-     <p>Based on chord-based metrics, it appears as though music has gotten slighty simpler over time. </p>
-   </div>
-  </div>
-   </div>
+  var options = {
+    series: [{type:'boxPlot', data:data}],
+    chart: {
+        type: 'boxPlot',
+        height: 350
+      },
+      title: {
+        text: 'Total Number of Chords',
+        align: 'left'
+      },
+      plotOptions: {
+        boxPlot: {
+          colors: {
+            upper: '#5C4742',
+            lower: '#A5978B'
+          }
+        }
+      }
+      };
 
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-   <script src="https://d3js.org/d3.v4.js"></script>
-   <script src="https://d3js.org/d3-array.v2.min.js"></script>
-   <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+      var chart = new ApexCharts(document.querySelector("#totalChordsChart"), options);
+      chart.render();
+}
 
+function uniqueChords(files){
+  data = [
+    {x:'1970s', y:fiveNumberSummary(files[0].map(a => parseInt(a.num_unique_chords)))},
+    {x:'1980s', y:fiveNumberSummary(files[1].map(a => parseInt(a.num_unique_chords)))},
+    {x:'1990s', y:fiveNumberSummary(files[2].map(a => parseInt(a.num_unique_chords)))},
+    {x:'2000s', y:fiveNumberSummary(files[3].map(a => parseInt(a.num_unique_chords)))},
+    {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.num_unique_chords)))}];
 
-   <script>
-   var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv", function(data){createCharts(data,  title="70s")});
+  var options = {
+    series: [{type:'boxPlot', data:data}],
+    chart: {
+        type: 'boxPlot',
+        height: 350
+      },
+      title: {
+        text: 'Number of Unique Chords',
+        align: 'left'
+      },
+      plotOptions: {
+        boxPlot: {
+          colors: {
+            upper: '#5C4742',
+            lower: '#A5978B'
+          }
+        }
+      }
+      };
 
-   var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv", function(data){createCharts(data, title="80s")});
+      var chart = new ApexCharts(document.querySelector("#uniqueChordsChart"), options);
+      chart.render();
+}
 
-   var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv", function(data){createCharts(data, title="90s")});
+function inKeySignature(files){
+  data = [
+    calcAverage(files[0].map(a => parseInt(a.chords_not_in_key_sig))),
+    calcAverage(files[1].map(a => parseInt(a.chords_not_in_key_sig))),
+    calcAverage(files[2].map(a => parseInt(a.chords_not_in_key_sig))),
+    calcAverage(files[3].map(a => parseInt(a.chords_not_in_key_sig))),
+    calcAverage(files[4].map(a => parseInt(a.chords_not_in_key_sig)))];
 
-   var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv", function(data){createCharts(data, title="00s")});
+    var options = {
+              series: data,
+              chart: {
+              type: 'polarArea',
+            },
+            labels: ['70s', '80s', '90s', '00s', '10s'],
+            title: {
+              text: 'Proportion of Chords Not in Key Signature',
+              align: 'left'
+            },
+            stroke: {
+              colors: ['#fff']
+            },
+            fill: {
+              opacity: 0.8
+            },
+            responsive: [{
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: 'bottom'
+                }
+              }
+            }]
+            };
 
-   var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv", function(data){createCharts(data, title="10s")});
-
-   // https://snippets.bentasker.co.uk/page-1907020841-Calculating-Mean,-Median,-Mode,-Range-and-Percentiles-with-Javascript-Javascript.html
-
-   function calcAverage(arr){
-       var a = arr.slice();
-       if (a.length){
-           sum = sumArr(a);
-           avg = sum / a.length;
-           return avg;
-       }
-       return false;
-   }
-   function calcMax(arr){
-       return Math.max(...arr);
-   }
-   function calcMedian(arr){
-           var a = arr.slice();
-           hf = Math.floor(a.length/2);
-           arr = sortArr(a);
-           if (a.length % 2){
-               return arr[hf];
-           }else{
-               return (parseFloat(arr[hf-1]) + parseFloat(arr[hf])) / 2.0;
-           }
-
-   }
-   function calcMin(arr){
-       return Math.min(...arr);
-   }
-   function calcMode(arr){
-       var ary = arr.slice();
-       t = ary.sort(function(a,b){
-           ary.filter(function(val){
-               val===a
-           }).length - ary.filter(function(val){
-               val===b
-           }).length});
-       return t.pop();
-   }
-   function calcQuartile(arr,q){
-       var a = arr.slice();
-       // Turn q into a decimal (e.g. 95 becomes 0.95)
-       q = q/100;
-
-       // Sort the array into ascending order
-       data = sortArr(a);
-
-       // Work out the position in the array of the percentile point
-       var p = ((data.length) - 1) * q;
-       var b = Math.floor(p);
-
-       // Work out what we rounded off (if anything)
-       var remainder = p - b;
-
-       // See whether that data exists directly
-       if (data[b+1]!==undefined){
-           return parseFloat(data[b]) + remainder * (parseFloat(data[b+1]) - parseFloat(data[b]));
-       }else{
-           return parseFloat(data[b]);
-       }
-   }
-   function calcRange(arr){
-       mx = calcMax(arr);
-       mn = calcMin(arr);
-       return mx-mn;
-   }
-   function sumArr(arr){
-       var a = arr.slice();
-       return a.reduce(function(a, b) { return parseFloat(a) + parseFloat(b); });
-   }
-   function sortArr(arr){
-       var ary = arr.slice();
-       ary.sort(function(a,b){ return parseFloat(a) - parseFloat(b);});
-       return ary;
-   }
-
-   function tabulate(data, columns, divname) {
-     var table = d3.select(divname).append('table').attr('class','table')
-     var thead = table.append('thead').attr('class','thead-dark')
-     var	tbody = table.append('tbody');
+            var chart = new ApexCharts(document.querySelector("#inKeySigChart"), options);
+            chart.render();
+}
 
 
-     // append the header row
-     thead.append('tr')
-       .selectAll('th')
-       .data(columns).enter()
-       .append('th')
-         .text(function (column) { return column; });
-
-
-
-     // create a row for each object in the data
-     var rows = tbody.selectAll('tr')
-       .data(data)
-       .enter()
-       .append('tr');
-
-     // create a cell in each row for each column
-     var cells = rows.selectAll('td')
-       .data(function (row) {
-         return columns.map(function (column) {
-           return {column: column, value: row[column]};
-         });
-       })
-       .enter()
-       .append('td')
-         .text(function (d) { return d.value; });
-
-     return table;
-   }
-
-   function createCharts(allRows, title){
-
-     var data_ooks = [];
-     var data_uniquechords = [];
-     data_minor_yes = 0;
-     data_minor_no = 0;
-     tonic_top_yes = 0;
-     tonic_top_no = 0;
-     tonic="I"
-     for (var i = 0; i<allRows.length; i++){
-       data_ooks.push(parseInt(allRows[i].chords_not_in_key_sig) / parseInt(allRows[i].total_chords));
-       data_uniquechords.push(allRows[i].num_unique_chords);
-
-
-       if (allRows[i].tonic.endsWith("m")){
-         data_minor_yes ++;
-         tonic="i";
-       } else{
-         data_minor_no ++;
-       }
-
-       if (allRows[i].most_frequent_chords.split(',').includes(tonic)){
-         tonic_top_yes ++;
-       } else{
-         tonic_top_no ++;
-       }
-     }
-
-     Plotly.newPlot('uniquechords'.concat(title), [{x: data_uniquechords, type:'histogram'}], {title:title,  xaxis: {title: "Unique Chords"}, yaxis: {title: "Count"}, bargap:0.05, xaxis: {range: [0, 25]}});
-     var table_data = [
-       {"Statistic": "Min", "Value": calcMin(data_uniquechords)},
-       {"Statistic": "25th %", "Value": calcQuartile(data_uniquechords, 25)},
-       {"Statistic": "Median", "Value": calcMedian(data_uniquechords)},
-       {"Statistic": "75th %", "Value": calcQuartile(data_uniquechords, 75)},
-       {"Statistic": "Max", "Value": calcMax(data_uniquechords)},
-       {"Statistic": "Mean", "Value": Math.round(calcAverage(data_uniquechords) * 100) / 100},
-       {"Statistic": "Mode", "Value": calcMode(data_uniquechords)}
-
-     ];
-     tabulate(table_data, ["Statistic", "Value"], "#".concat('uniquechords').concat(title).concat("table"));
-
-
-     Plotly.newPlot('ooks'.concat(title), [{x: data_ooks, type:'histogram'}], {title:title,  xaxis: {title: "Proportion of chords not in key signature"}, yaxis: {title: "Count"}, bargap:0.05, xaxis: {range: [0, 1]}});
-     var table_data = [
-       {"Statistic": "Min", "Value": Math.round(calcMin(data_ooks)*100).toString().concat(" %")},
-       {"Statistic": "25th %", "Value": Math.round(calcQuartile(data_ooks, 25)*100).toString().concat(" %")},
-       {"Statistic": "Median", "Value": Math.round(calcMedian(data_ooks)*100).toString().concat(" %")},
-       {"Statistic": "75th %", "Value": Math.round(calcQuartile(data_ooks, 75)*100).toString().concat(" %")},
-       {"Statistic": "Max", "Value": Math.round(calcMax(data_ooks)*100).toString().concat(" %")},
-       {"Statistic": "Mean", "Value": Math.round(calcAverage(data_ooks) * 100).toString().concat(" %") }
-     ];
-     tabulate(table_data, ["Statistic", "Value"], "#".concat('ooks').concat(title).concat("table"));
-
-     Plotly.newPlot('minor'.concat(title), [{values: [data_minor_yes, data_minor_no], labels: ['In Minor Key','Not In Minor Key'], type:'pie'}]);
-
-     Plotly.newPlot('tonictop'.concat(title), [{values: [tonic_top_yes, tonic_top_no], labels: ['Tonic is Top Chord','Tonic is not Top Chord'], type:'pie'}]);
-   }
-
-   function createCharts2(){
-
-   }
-   </script>
-   <script>
-   $(function(){
-   $("#nav-placeholder").load("nav.html");
-   });
-   </script>
- </body>
+</script>
+<script>
+$(function(){
+$("#nav-placeholder").load("nav.html");
+});
+</script>
+</body>

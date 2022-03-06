@@ -29,33 +29,7 @@
     <h2>Number of unique sections</h2>
    </div>
 
-   <div class="row">
-     <div class="col-md-4"><p>Sections in a song include a verse, chorus, bridge, outro, intro, solo, instrumental, etc. Some songs are very simple, including just verses and a repeating chorus. Others may include multiple different sections in addition to these staple sections. Thus, the number of unique sections is a measure of complexity.</p>
-
-     <p>We can see that the number of unique sections actutally appears to have slightly increased over time.</p></div>
-      <div class="col-md-4">
-        <div id="unique70s"></div>
-        <div id="unique70stable"></div>
-      </div>
-      <div class="col-md-4">
-        <div id="unique80s"></div>
-        <div id="unique80stable"></div>
-      </div>
-   </div>
-
-
-   <div class="row">
-     <div class="col-md-4">
-       <div id="unique90s"></div>
-       <div id="unique90stable"></div>
-     </div><div class="col-md-4">
-       <div id="unique00s"></div>
-       <div id="unique00stable"></div>
-     </div><div class="col-md-4">
-       <div id="unique10s"></div>
-       <div id="unique10stable"></div>
-     </div>
-   </div>
+   <div class="row"><div class="col-md-12" id="uniqueSectionsChart"></div></div>
 
 
 
@@ -63,33 +37,8 @@
     <h2>Total number of sections</h2>
    </div>
 
-   <div class="row">
-     <div class="col-md-4">
-       <p>Most sections are designed to be repeated more than once, most notably the chorus. Here, we look at how many sections a song has when repeated sections are included.</p>
-       <p>Total number of sections appears to have remained stagnant over the last 50 years, indicating that modern music is essentially made from the same number of pieces, so to speak, but that there is slightly more variety in the kinds of pieces it's built from. </p>
-     </div>
-     <div class="col-md-4">
-       <div id="total70s"></div>
-       <div id="total70stable"></div>
-     </div>
-     <div class="col-md-4">
-       <div id="total80s"></div>
-       <div id="total80stable"></div>
-     </div>
-   </div>
+   <div class="row"><div class="col-md-12" id="totalSectionsChart"></div></div>
 
-   <div class="row">
-     <div class="col-md-4">
-       <div id="total90s"></div>
-       <div id="total90stable"></div>
-     </div><div class="col-md-4">
-       <div id="total00s"></div>
-       <div id="total00stable"></div>
-     </div><div class="col-md-4">
-       <div id="total10s"></div>
-       <div id="total10stable"></div>
-     </div>
-   </div>
 
 
 
@@ -103,9 +52,8 @@
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-   <script src="https://d3js.org/d3.v4.js"></script>
-   <script src="https://d3js.org/d3-array.v2.min.js"></script>
-   <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+   <script src="https://d3js.org/d3.v5.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
    <script>
@@ -184,92 +132,93 @@
        return ary;
    }
 
-    var data70s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1970_distribution_stats.csv", function(data){createCharts(data, "unique70s", "total70s", title="1970s")});
+   function fiveNumberSummary(data){
+     return([calcMin(data), calcQuartile(data, 25), calcMedian(data), calcQuartile(data,75), calcMax(data)])
+   }Promise.all([
+       d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1970_distribution_stats.csv"),
+       d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1980_distribution_stats.csv"),
+       d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1990_distribution_stats.csv"),
+       d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2000_distribution_stats.csv"),
+       d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2010_distribution_stats.csv")
+   ]).then(function(files) {
+       // files[0] will contain file1.csv
+       // files[1] will contain file2.csv
+       console.log(files[0]);
+       totalSections(files);
+       uniqueSections(files);
 
-    var data80s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1980_distribution_stats.csv", function(data){createCharts(data, "unique80s", "total80s", title="1980s")});
+   }).catch(function(err) {
+       // handle error here
+       console.log(err)
+   })
 
-    var data90s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/1990_distribution_stats.csv", function(data){createCharts(data, "unique90s", "total90s", title="1990s")});
+   function totalSections(files){
+     data = [
+       {x:'1970s', y:fiveNumberSummary(files[0].map(a => parseInt(a.total_num_sections)))},
+       {x:'1980s', y:fiveNumberSummary(files[1].map(a => parseInt(a.total_num_sections)))},
+       {x:'1990s', y:fiveNumberSummary(files[2].map(a => parseInt(a.total_num_sections)))},
+       {x:'2000s', y:fiveNumberSummary(files[3].map(a => parseInt(a.total_num_sections)))},
+       {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.total_num_sections)))}];
 
-    var data00s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2000_distribution_stats.csv", function(data){createCharts(data, "unique00s", "total00s", title="2000s")});
+     var options = {
+       series: [{type:'boxPlot', data:data}],
+       chart: {
+           type: 'boxPlot',
+           height: 350
+         },
+         title: {
+           text: 'Total Number of Sections',
+           align: 'left'
+         },
+         plotOptions: {
+           boxPlot: {
+             colors: {
+               upper: '#5C4742',
+               lower: '#A5978B'
+             }
+           }
+         }
+         };
 
-    var data10s = d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/SongStructure/2010_distribution_stats.csv", function(data){createCharts(data, "unique10s", "total10s", title="2010s")});
+         var chart = new ApexCharts(document.querySelector("#totalSectionsChart"), options);
+         chart.render();
+   }
 
-    function tabulate(data, columns, divname) {
-      var table = d3.select(divname).append('table').attr('class','table')
-      var thead = table.append('thead').attr('class','thead-dark')
-      var	tbody = table.append('tbody');
+   function uniqueSections(files){
+     data = [
+       {x:'1970s', y:fiveNumberSummary(files[0].map(a => parseInt(a.num_unique_sections)))},
+       {x:'1980s', y:fiveNumberSummary(files[1].map(a => parseInt(a.num_unique_sections)))},
+       {x:'1990s', y:fiveNumberSummary(files[2].map(a => parseInt(a.num_unique_sections)))},
+       {x:'2000s', y:fiveNumberSummary(files[3].map(a => parseInt(a.num_unique_sections)))},
+       {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.num_unique_sections)))}];
 
-      console.log(table);
+     var options = {
+       series: [{type:'boxPlot', data:data}],
+       chart: {
+           type: 'boxPlot',
+           height: 350
+         },
+         title: {
+           text: 'Number of Unique Sections',
+           align: 'left'
+         },
+         plotOptions: {
+           boxPlot: {
+             colors: {
+               upper: '#5C4742',
+               lower: '#A5978B'
+             }
+           }
+         }
+         };
 
-      // append the header row
-      thead.append('tr')
-        .selectAll('th')
-        .data(columns).enter()
-        .append('th')
-          .text(function (column) { return column; });
-
-
-
-      // create a row for each object in the data
-      var rows = tbody.selectAll('tr')
-        .data(data)
-        .enter()
-        .append('tr');
-
-      // create a cell in each row for each column
-      var cells = rows.selectAll('td')
-        .data(function (row) {
-          return columns.map(function (column) {
-            return {column: column, value: row[column]};
-          });
-        })
-        .enter()
-        .append('td')
-          .text(function (d) { return d.value; });
-
-      return table;
-    }
-
-    function createCharts(allRows, div1, div2, title){
-      console.log(allRows);
+         var chart = new ApexCharts(document.querySelector("#uniqueSectionsChart"), options);
+         chart.render();
+   }
 
 
-      var data_unique =[];
-      var data_total = [];
-      for (var i = 0; i<allRows.length; i++){
-        data_unique.push(parseInt(allRows[i].num_unique_sections));
-        data_total.push(parseInt(allRows[i].total_num_sections));
-      }
-      // console.log(data_unique);
-      Plotly.newPlot(div1, [{x: data_unique, type:'histogram'}], {title:title,  xaxis: {title: "Number of Sections"}, yaxis: {title: "Count"}, bargap:0.05, xaxis: {range: [0, 15]}});
-      Plotly.newPlot(div2, [{x: data_total, type:'histogram'}], {title:title,  xaxis: {title: "Number of Sections"}, yaxis: {title: "Count"}, bargap:0.05, xaxis: {range: [0, 30]}});
 
-
-      var table_data = [
-        {"Statistic": "Min", "Value": calcMin(data_unique)},
-        {"Statistic": "25th %", "Value": calcQuartile(data_unique, 25)},
-        {"Statistic": "Median", "Value": calcMedian(data_unique)},
-        {"Statistic": "75th %", "Value": calcQuartile(data_unique, 75)},
-        {"Statistic": "Max", "Value": calcMax(data_unique)},
-        {"Statistic": "Mean", "Value": Math.round(calcAverage(data_unique) * 100) / 100},
-        {"Statistic": "Mode", "Value": calcMode(data_unique)}
-
-      ];
-      tabulate(table_data, ["Statistic", "Value"], "#".concat(div1).concat("table"));
-
-      var table_data_2 = [
-        {"Statistic": "Min", "Value": calcMin(data_total)},
-        {"Statistic": "25th %", "Value": calcQuartile(data_total, 25)},
-        {"Statistic": "Median", "Value": calcMedian(data_total)},
-        {"Statistic": "75th %", "Value": calcQuartile(data_total, 75)},
-        {"Statistic": "Max", "Value": calcMax(data_total)},
-        {"Statistic": "Mean", "Value": Math.round(calcAverage(data_total) * 100) / 100},
-        {"Statistic": "Mode", "Value": calcMode(data_total)}
-
-      ];
-      tabulate(table_data_2, ["Statistic", "Value"], "#".concat(div2).concat("table"));
-
-    }
+  
 
 
    </script>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+
+</style>
+
+<body>
+  <div class="" id="nav-placeholder">
+
+  </div>
+
+  <div class="container">
+   <div class="row">
+     <div class="col-md-12">
+       <h1>Lyrics</h1>
+       <p>yeaaaaah!!!!!</p>
+     </div>
+   </div>
+
+   <div class="row"><div class="col-md-12"><h2>Total Number Chords</h2><p>Explanation</p></div></div>
+   <div class="row"><div class="col-md-12" id="totalChordsChart"></div></div>
+
+
+ </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+ <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+ <!-- <script src="https://d3js.org/d3-array.v2.min.js"></script> -->
+ <script src="https://d3js.org/d3.v5.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</script>
+<script>
+
+// https://snippets.bentasker.co.uk/page-1907020841-Calculating-Mean,-Median,-Mode,-Range-and-Percentiles-with-Javascript-Javascript.html
+
+function calcAverage(arr){
+    var a = arr.slice();
+    if (a.length){
+        sum = sumArr(a);
+        avg = sum / a.length;
+        return avg;
+    }
+    return false;
+}
+function calcMax(arr){
+    return Math.max(...arr);
+}
+function calcMedian(arr){
+        var a = arr.slice();
+        hf = Math.floor(a.length/2);
+        arr = sortArr(a);
+        if (a.length % 2){
+            return arr[hf];
+        }else{
+            return (parseFloat(arr[hf-1]) + parseFloat(arr[hf])) / 2.0;
+        }
+
+}
+function calcMin(arr){
+    return Math.min(...arr);
+}
+function calcMode(arr){
+    var ary = arr.slice();
+    t = ary.sort(function(a,b){
+        ary.filter(function(val){
+            val===a
+        }).length - ary.filter(function(val){
+            val===b
+        }).length});
+    return t.pop();
+}
+function calcQuartile(arr,q){
+    var a = arr.slice();
+    // Turn q into a decimal (e.g. 95 becomes 0.95)
+    q = q/100;
+
+    // Sort the array into ascending order
+    data = sortArr(a);
+
+    // Work out the position in the array of the percentile point
+    var p = ((data.length) - 1) * q;
+    var b = Math.floor(p);
+
+    // Work out what we rounded off (if anything)
+    var remainder = p - b;
+
+    // See whether that data exists directly
+    if (data[b+1]!==undefined){
+        return parseFloat(data[b]) + remainder * (parseFloat(data[b+1]) - parseFloat(data[b]));
+    }else{
+        return parseFloat(data[b]);
+    }
+}
+function calcRange(arr){
+    mx = calcMax(arr);
+    mn = calcMin(arr);
+    return mx-mn;
+}
+function sumArr(arr){
+    var a = arr.slice();
+    return a.reduce(function(a, b) { return parseFloat(a) + parseFloat(b); });
+}
+function sortArr(arr){
+    var ary = arr.slice();
+    ary.sort(function(a,b){ return parseFloat(a) - parseFloat(b);});
+    return ary;
+}
+
+function fiveNumberSummary(data){
+  return([calcMin(data), calcQuartile(data, 25), calcMedian(data), calcQuartile(data,75), calcMax(data)])
+}
+
+// Promise.all([
+//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv"),
+//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv"),
+//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv"),
+//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv"),
+//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv")
+// ]).then(function(files) {
+//     // files[0] will contain file1.csv
+//     // files[1] will contain file2.csv
+//     console.log(files[0]);
+//     totalChords(files);
+//     uniqueChords(files);
+//     inKeySignature(files);
+//
+// }).catch(function(err) {
+//     // handle error here
+//     console.log(err)
+// })
+//
+//
+// function totalChords(files){
+//   data = [
+//     {x:'1970s', y:fiveNumberSummary(files[0].map(a => parseInt(a.total_chords)))},
+//     {x:'1980s', y:fiveNumberSummary(files[1].map(a => parseInt(a.total_chords)))},
+//     {x:'1990s', y:fiveNumberSummary(files[2].map(a => parseInt(a.total_chords)))},
+//     {x:'2000s', y:fiveNumberSummary(files[3].map(a => parseInt(a.total_chords)))},
+//     {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.total_chords)))}];
+//
+//   var options = {
+//     series: [{type:'boxPlot', data:data}],
+//     chart: {
+//         type: 'boxPlot',
+//         height: 350
+//       },
+//       title: {
+//         text: 'Total Number of Chords',
+//         align: 'left'
+//       },
+//       plotOptions: {
+//         boxPlot: {
+//           colors: {
+//             upper: '#5C4742',
+//             lower: '#A5978B'
+//           }
+//         }
+//       }
+//       };
+//
+//       var chart = new ApexCharts(document.querySelector("#totalChordsChart"), options);
+//       chart.render();
+// }
+//
+// function uniqueChords(files){
+//   data = [
+//     {x:'1970s', y:fiveNumberSummary(files[0].map(a => parseInt(a.num_unique_chords)))},
+//     {x:'1980s', y:fiveNumberSummary(files[1].map(a => parseInt(a.num_unique_chords)))},
+//     {x:'1990s', y:fiveNumberSummary(files[2].map(a => parseInt(a.num_unique_chords)))},
+//     {x:'2000s', y:fiveNumberSummary(files[3].map(a => parseInt(a.num_unique_chords)))},
+//     {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.num_unique_chords)))}];
+//
+//   var options = {
+//     series: [{type:'boxPlot', data:data}],
+//     chart: {
+//         type: 'boxPlot',
+//         height: 350
+//       },
+//       title: {
+//         text: 'Number of Unique Chords',
+//         align: 'left'
+//       },
+//       plotOptions: {
+//         boxPlot: {
+//           colors: {
+//             upper: '#5C4742',
+//             lower: '#A5978B'
+//           }
+//         }
+//       }
+//       };
+//
+//       var chart = new ApexCharts(document.querySelector("#uniqueChordsChart"), options);
+//       chart.render();
+// }
+//
+// function inKeySignature(files){
+//   data = [
+//     calcAverage(files[0].map(a => parseInt(a.chords_not_in_key_sig))),
+//     calcAverage(files[1].map(a => parseInt(a.chords_not_in_key_sig))),
+//     calcAverage(files[2].map(a => parseInt(a.chords_not_in_key_sig))),
+//     calcAverage(files[3].map(a => parseInt(a.chords_not_in_key_sig))),
+//     calcAverage(files[4].map(a => parseInt(a.chords_not_in_key_sig)))];
+//
+//     var options = {
+//               series: data,
+//               chart: {
+//               type: 'polarArea',
+//             },
+//             labels: ['70s', '80s', '90s', '00s', '10s'],
+//             title: {
+//               text: 'Proportion of Chords Not in Key Signature',
+//               align: 'left'
+//             },
+//             stroke: {
+//               colors: ['#fff']
+//             },
+//             fill: {
+//               opacity: 0.8
+//             },
+//             responsive: [{
+//               breakpoint: 480,
+//               options: {
+//                 chart: {
+//                   width: 200
+//                 },
+//                 legend: {
+//                   position: 'bottom'
+//                 }
+//               }
+//             }]
+//             };
+//
+//             var chart = new ApexCharts(document.querySelector("#inKeySigChart"), options);
+//             chart.render();
+// }
+
+
+</script>
+<script>
+$(function(){
+$("#nav-placeholder").load("nav.html");
+});
+</script>
+</body>

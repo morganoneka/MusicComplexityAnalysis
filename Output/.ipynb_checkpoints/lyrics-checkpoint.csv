@@ -1,0 +1,26 @@
+,song,artist,decade,total_lines,unique_lines,total_words,unique_words,top_common_words,top_uncommon_words,neg,neu,pos,compound
+0,happy xmas war is over,john lennon,1970,40,25,182,115,"and,a,the,christmas,so,is,one,for,year,new","christmas,one,year,new,hope,happy,lets,merry,good,without",0.046,0.585,0.37,0.9973
+1,im not in love,10cc,1970,27,18,176,122,"a,i'm,don't,not,in,love,it,me,it's,because","i'm,love,ooh,wait,long,time,nono,mean,forget,silly",0.168,0.749,0.083,-0.9705
+2,highway to hell,acdc,1970,35,25,203,151,"to,highway,hell,,on,the,i'm,me,3,4","highway,hell,,i'm,3,4,1,2,gonna,way",0.376,0.562,0.062,-0.9983
+3,tnt,acdc,1970,36,20,140,118,"tnt,oi,me,your,i'm,you,the,and,no,watch","tnt,oi,i'm,watch,explode,lock,mean,women,ain't,got",0.061,0.863,0.077,-0.1596
+4,dream on,aerosmith,1970,20,20,164,164,"dream,on,the,to,and,sing,know,you,for,i","dream,sing,know,true,got,comes,come,ev'ry,time,look",0.064,0.66,0.276,0.9861
+5,last christmas,wham,1980,45,23,344,180,"you,it,to,i,me,a,gave,but,someone,my","gave,someone,heart,year,i'll,give,special,christmas,next,last",0.123,0.664,0.213,0.9931
+6,take on me,a ha,1980,25,13,171,111,"me,take,on,be,ill,to,say,day,or,away","take,ill,say,day,away,gone,two,coming,ok,life",0.154,0.742,0.103,-0.8481
+7,back in black,acdc,1980,55,38,245,180,"i'm,back,yes,in,well,baaaack,black,the,me,to","i'm,back,yes,well,baaaack,black,'cause,im,yeah,i've",0.015,0.698,0.287,0.9965
+8,you shook me all night long,acdc,1980,30,27,249,226,"me,you,shook,all,night,long,and,was,the,yeah","shook,night,long,yeah,another,come,'cause,walls,shaking,earth",0.169,0.695,0.136,0.0458
+9,against the wind,bob seger the silver bullet band,1980,53,47,394,363,"the,against,wind,running,i,to,and,still,was,were","wind,running,still,young,found,run,i'm,man,like,nothing",0.026,0.888,0.086,0.9784
+10,nothing else matters,metallica,1990,39,18,219,100,"for,never,and,i,cared,they,nothing,else,what,matters","never,cared,nothing,else,matters,know,way,close,matter,far",0.184,0.748,0.067,-0.9692
+11,whats up,4 non blondes,1990,39,19,317,155,"i,hey,yeah,and,what's,of,my,going,on,a","hey,yeah,what's,going,get,say,said,i'm,try,pray",0.06,0.682,0.258,0.9935
+12,crazy,aerosmith,1990,32,24,292,224,"crazy,you,i,me,yeah,that,a,the,to,you're","crazy,yeah,baby,like,kinda,go,i'm,drive,girl,lovin'",0.186,0.668,0.145,-0.8807
+13,cryin,aerosmith,1990,42,34,288,236,"you,i,to,love,was,now,the,do,cryin',i'm","love,cryin',i'm,yeah,'cause,,got,sweet,met,tryin'",0.092,0.668,0.24,0.9948
+14,i dont want to miss a thing,aerosmith,1990,34,27,249,204,"i,you,and,don't,miss,wanna,to,just,a,close","miss,wanna,close,moment,want,thing,yeah,stay,eyes,i'd",0.125,0.72,0.154,0.9259
+15,stan,eminem,2000,137,105,1327,1115,"i,you,and,my,that,a,to,the,your,i'm","i'm,got,see,like,bad,hope,can't,even,slim,man",0.075,0.768,0.157,0.9991
+16,here without you,3 doors down,2000,33,21,268,179,"you,and,i,but,the,baby,me,i'm,my,here","baby,i'm,without,still,yeah,time,think,lonely,mind,dream",0.061,0.753,0.185,0.991
+17,kryptonite,3 doors down,2000,25,15,285,165,"you,i,my,the,if,will,be,and,me,side","side,call,still,keep,go,crazy,superman,i'm,alive,well",0.065,0.729,0.207,0.9923
+18,if it means a lot to you,a day to remember,2000,45,28,330,226,"la,i,you,can,singing,it,home,'til,and,to","la,singing,home,'til,get,everyone,wait,swear,can't,till",0.05,0.814,0.135,0.9852
+19,dear maria count me in,all time low,2000,43,29,297,187,"the,your,a,i'm,cause,it,count,and,you,i","i'm,cause,count,make,got,picture,dear,maria,there's,story",0.049,0.836,0.114,0.9476
+20,snowman,sia,2010,38,20,229,141,"don't,you,me,my,snowman,baby,and,cry,let's,the","snowman,baby,cry,let's,i'm,we'll,home,go,who'll,tears",0.094,0.681,0.225,0.9864
+21,travelin soldier,aaron lewis,2010,60,37,464,319,"the,a,for,to,of,i,never,and,said,waitin'","never,said,waitin',love,soldier,letter,back,told,alone,one",0.085,0.741,0.174,0.9956
+22,breezeblocks,alt j,2010,41,28,364,253,"love,la,you,ahhh,my,i,go,so,ah,","love,la,ahhh,go,ah,,please,dont,break,eat",0.032,0.547,0.422,0.9997
+23,left hand free,alt j,2010,35,19,182,100,"left,well,hand's,free,my,the,your,a,hand,his","left,well,hand's,free,hand,hey,oh,one,grip,right",0.09,0.579,0.331,0.9948
+24,auf uns,andreas bourani,2010,55,30,282,161,"auf,uns,ein,hoch,das,,was,diese,zeit,und","auf,uns,ein,hoch,das,,diese,zeit,und,moment",0.053,0.947,0.0,-0.9485
