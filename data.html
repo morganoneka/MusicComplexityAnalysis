@@ -93,14 +93,15 @@
   <script src="https://d3js.org/d3.v4.js"></script>
   <script src="https://d3js.org/d3-array.v2.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script>
     update_table('1970s');
 
-    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1970.csv?token=GHSAT0AAAAAABRTQAMAPFAISACFXUVD2M34YQWRH7Q", function(data){   make_genre_piechart(data, title="70s")});
-    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1980.csv?token=GHSAT0AAAAAABRTQAMAE47KNZEVT44RMSMGYQWRLZQ", function(data){   make_genre_piechart(data, title="80s")});
-    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1990.csv?token=GHSAT0AAAAAABRTQAMBYNOHWBI5QL7DBGN2YQWRN3Q", function(data){   make_genre_piechart(data, title="90s")});
-    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/2000.csv?token=GHSAT0AAAAAABRTQAMA35VE64IIRJVRESTSYQWROMA", function(data){   make_genre_piechart(data, title="00s")});
-    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/2010.csv?token=GHSAT0AAAAAABRTQAMAVHFYLY4LU2P3KGSCYQWROWQ", function(data){   make_genre_piechart(data, title="10s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1970.csv?token=GHSAT0AAAAAABRTQAMAPFAISACFXUVD2M34YQWRH7Q", function(data){   make_genre_barchart(data, title="70s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1980.csv?token=GHSAT0AAAAAABRTQAMAE47KNZEVT44RMSMGYQWRLZQ", function(data){   make_genre_barchart(data, title="80s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/1990.csv?token=GHSAT0AAAAAABRTQAMBYNOHWBI5QL7DBGN2YQWRN3Q", function(data){   make_genre_barchart(data, title="90s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/2000.csv?token=GHSAT0AAAAAABRTQAMA35VE64IIRJVRESTSYQWROMA", function(data){   make_genre_barchart(data, title="00s")});
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/Genre/2010.csv?token=GHSAT0AAAAAABRTQAMAVHFYLY4LU2P3KGSCYQWROWQ", function(data){   make_genre_barchart(data, title="10s")});
 
     function update_table(button){
       current_page = ""
@@ -187,6 +188,76 @@
       return table;
     }
 
+    function make_genre_barchart(data, title){
+      genre_counts = [];
+      for (var i =0; i<data.length; i++){
+          gc = parseInt(data[i].Count);
+          matches = data[i].Genre.match(/\d+/g);
+          if (gc > 15 & matches==null & data[i].Genre != ""){
+            // genre_names.push(data[i].Genre);
+            genre_counts.push({x: data[i].Genre, y:gc});
+          }
+      }
+
+      genre_counts = genre_counts.slice().sort((a, b) => d3.descending(a.y, b.y))
+
+      options = {
+        chart: {
+          type: 'bar'
+        },
+        dataLabels: {
+          enabled: true,
+          dropShadow: {
+              enabled: true,
+              left: 2,
+              top: 2,
+              opacity: 0.3
+          }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            distributed: true
+
+          }
+        },
+        title: {
+            text: title,
+            align: 'center',
+            margin: 10,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize:  '16px',
+              fontWeight:  'bold',
+              color:  '#263238'
+            },
+        },
+        tooltip: {
+          y: {
+               formatter: undefined,
+               title: {
+                   formatter: (seriesName) => "Number of Songs:",
+               },
+           }
+        },
+        legend: {
+          show: false
+        },
+        theme: {
+          palette: 'palette8' // upto palette10
+        },
+        series: [{
+          data: genre_counts
+        }]
+      }
+
+      var chart = new ApexCharts(document.querySelector('#genre'.concat(title)), options);
+
+chart.render();
+    }
+
     function make_genre_piechart(data, title){
       genre_names = [];
       genre_counts = [];
@@ -199,7 +270,7 @@
           }
       }
       var layout = {xaxis: {
-        title:{'text':"19".concat(title)},
+        title:{'text':"".concat(title)},
     tickangle: -45
 
   }};

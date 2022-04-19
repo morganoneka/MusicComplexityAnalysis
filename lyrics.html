@@ -6,6 +6,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 </head>
 
 <style>
@@ -25,8 +27,19 @@
      </div>
    </div>
 
-   <div class="row"><div class="col-md-12"><h2>Total Number Chords</h2><p>Explanation</p></div></div>
-   <div class="row"><div class="col-md-12" id="totalChordsChart"></div></div>
+   <div class="row"><div class="col-md-6"><h2>Total Number of Lines</h2><p>Explanation</p></div><div class="col-md-6" id="uniqueLinesChart"></div></div>
+
+   <div class="row"><div class="col-md-6"><h2>Total Number of Words</h2><p>Explanation</p></div><div class="col-md-6" id="uniqueWordsChart"></div></div>
+
+   <div class="row"><div class="col-md-12"><h2>Positive vs. Negative Sentiment</h2><p>Explanation</p></div></div>
+   <div class="row"><div class="col-md-12" id="sentiment70s"></div></div>
+
+   <div class="row"><div class="col-md-12"><h2>Lyric Word Clouds</h2><p>Explanation</p></div></div>
+   <div class="row"><div class="col-md-12" id="wordcloud70s"></div></div>
+   <div class="row"><div class="col-md-12" id="wordcloud80s"></div></div>
+   <div class="row"><div class="col-md-12" id="wordcloud90s"></div></div>
+   <div class="row"><div class="col-md-12" id="wordcloud00s"></div></div>
+   <div class="row"><div class="col-md-12" id="wordcloud10s"></div></div>
 
 
  </div>
@@ -118,57 +131,252 @@ function fiveNumberSummary(data){
   return([calcMin(data), calcQuartile(data, 25), calcMedian(data), calcQuartile(data,75), calcMax(data)])
 }
 
-// Promise.all([
-//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1970.csv"),
-//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1980.csv"),
-//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/1990.csv"),
-//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2000.csv"),
-//     d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/ChordStats/2010.csv")
-// ]).then(function(files) {
-//     // files[0] will contain file1.csv
-//     // files[1] will contain file2.csv
-//     console.log(files[0]);
-//     totalChords(files);
-//     uniqueChords(files);
-//     inKeySignature(files);
-//
-// }).catch(function(err) {
-//     // handle error here
-//     console.log(err)
-// })
-//
-//
-// function totalChords(files){
-//   data = [
-//     {x:'1970s', y:fiveNumberSummary(files[0].map(a => parseInt(a.total_chords)))},
-//     {x:'1980s', y:fiveNumberSummary(files[1].map(a => parseInt(a.total_chords)))},
-//     {x:'1990s', y:fiveNumberSummary(files[2].map(a => parseInt(a.total_chords)))},
-//     {x:'2000s', y:fiveNumberSummary(files[3].map(a => parseInt(a.total_chords)))},
-//     {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.total_chords)))}];
-//
-//   var options = {
-//     series: [{type:'boxPlot', data:data}],
-//     chart: {
-//         type: 'boxPlot',
-//         height: 350
-//       },
-//       title: {
-//         text: 'Total Number of Chords',
-//         align: 'left'
-//       },
-//       plotOptions: {
-//         boxPlot: {
-//           colors: {
-//             upper: '#5C4742',
-//             lower: '#A5978B'
-//           }
-//         }
-//       }
-//       };
-//
-//       var chart = new ApexCharts(document.querySelector("#totalChordsChart"), options);
-//       chart.render();
-// }
+Promise.all([
+    d3.csv("https://raw.githubusercontent.com/morganoneka/UltimateGuitarAnalysis/main/Output/lyrics.csv"),
+    d3.csv("https://raw.githubusercontent.com/morganoneka/MusicComplexityAnalysis/main/Output/Lyrics/1970.txt")
+]).then(function(files) {
+    // files[0] will contain file1.csv
+    // files[1] will contain file2.csv
+    console.log(fiveNumberSummary(files[0].filter(x => x.decade == "1970").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines))));
+
+    propUniqueLines(files);
+    propUniqueWords(files);
+    sentimentChart(files);
+    createAllWordClouds(files);
+    // totalLines(files);
+    // sentimentAnalysis(files);
+    // inKeySignature(files);
+
+}).catch(function(err) {
+    // handle error here
+    console.log(err)
+})
+
+function createAllWordClouds(files){
+  wordCloud(files[1], "wordcloud70s")
+}
+
+function wordCloud(file, divname){
+
+  text = file.map(x => d3.entries(x)[0].value).toString()
+
+  text,
+    lines = text.split(/[,\. ]+/g),
+    data = lines.reduce((arr, word) => {
+        let obj = Highcharts.find(arr, obj => obj.name === word);
+        if (obj) {
+            obj.weight += 1;
+        } else {
+            obj = {
+                name: word,
+                weight: 1
+            };
+            arr.push(obj);
+        }
+        return arr;
+    }, []);
+
+Highcharts.chart(divname, {
+    accessibility: {
+        screenReaderSection: {
+            beforeChartFormat: '<h5>{chartTitle}</h5>' +
+                '<div>{chartSubtitle}</div>' +
+                '<div>{chartLongdesc}</div>' +
+                '<div>{viewTableButton}</div>'
+        }
+    },
+    series: [{
+        type: 'wordcloud',
+        data,
+        name: 'Occurrences'
+    }],
+    title: {
+        text: 'Wordcloud of Lorem Ipsum'
+    }
+});
+}
+
+function sentimentChart(files){
+  data = [
+    calcAverage(files[0].filter(x => x.decade == "1970").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines)))
+  ]
+
+
+    var options = {
+      chart:{ type:'radar'},
+      series: [
+        {
+          name: "1970s",
+          data: [
+            calcAverage(files[0].filter(x => x.decade == "1970").map(a => parseFloat(a.neg))),
+            calcAverage(files[0].filter(x => x.decade == "1970").map(a => parseFloat(a.neu))),
+            calcAverage(files[0].filter(x => x.decade == "1970").map(a => parseFloat(a.pos)))
+          ]
+        },
+        {
+          name: "1980s",
+          data: [
+            calcAverage(files[0].filter(x => x.decade == "1980").map(a => parseFloat(a.neg))),
+            calcAverage(files[0].filter(x => x.decade == "1980").map(a => parseFloat(a.neu))),
+            calcAverage(files[0].filter(x => x.decade == "1980").map(a => parseFloat(a.pos)))
+          ]
+        }
+      ],
+      labels: ['negative', 'neutral', 'positive']
+    }
+
+    var chart = new ApexCharts(document.querySelector("#sentiment70s"), options);
+    chart.render();
+}
+
+function propUniqueLines(files){
+  data = [
+    calcAverage(files[0].filter(x => x.decade == "1970").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines))),
+    calcAverage(files[0].filter(x => x.decade == "1980").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines))),
+    calcAverage(files[0].filter(x => x.decade == "1990").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines))),
+    calcAverage(files[0].filter(x => x.decade == "2000").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines))),
+    calcAverage(files[0].filter(x => x.decade == "2010").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines)))];
+
+    var options = {
+              series: data,
+              chart: {
+              type: 'polarArea',
+            },
+            labels: ['70s', '80s', '90s', '00s', '10s'],
+            title: {
+              text: 'Proportion of Unique Lines',
+              align: 'left'
+            },
+            stroke: {
+              colors: ['#fff']
+            },
+            fill: {
+              opacity: 0.8
+            },
+            responsive: [{
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: 'bottom'
+                }
+              }
+            }]
+            };
+
+            var chart = new ApexCharts(document.querySelector("#uniqueLinesChart"), options);
+            chart.render();
+}
+
+function propUniqueWords(files){
+  data = [
+    calcAverage(files[0].filter(x => x.decade == "1970").filter(x => x.total_words > 0).map(a => parseFloat(a.unique_words / a.total_words))),
+    calcAverage(files[0].filter(x => x.decade == "1980").filter(x => x.total_words > 0).map(a => parseFloat(a.unique_words / a.total_words))),
+    calcAverage(files[0].filter(x => x.decade == "1990").filter(x => x.total_words > 0).map(a => parseFloat(a.unique_words / a.total_words))),
+    calcAverage(files[0].filter(x => x.decade == "2000").filter(x => x.total_words > 0).map(a => parseFloat(a.unique_words / a.total_words))),
+    calcAverage(files[0].filter(x => x.decade == "2010").filter(x => x.total_words > 0).map(a => parseFloat(a.unique_words / a.total_words)))];
+
+    var options = {
+              series: data,
+              chart: {
+              type: 'polarArea',
+            },
+            labels: ['70s', '80s', '90s', '00s', '10s'],
+            title: {
+              text: 'Proportion of Unique Lines',
+              align: 'left'
+            },
+            stroke: {
+              colors: ['#fff']
+            },
+            fill: {
+              opacity: 0.8
+            },
+            responsive: [{
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: 'bottom'
+                }
+              }
+            }]
+            };
+
+            var chart = new ApexCharts(document.querySelector("#uniqueWordsChart"), options);
+            chart.render();
+}
+
+function totalLines(files){
+  data = [
+    {x:'1970s', y:fiveNumberSummary(files[0].filter(x => x.decade == "1970").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines)))},
+    {x:'1980s', y:fiveNumberSummary(files[0].filter(x => x.decade == "1980").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines)))},
+    {x:'1990s', y:fiveNumberSummary(files[0].filter(x => x.decade == "1990").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines)))},
+    {x:'2000s', y:fiveNumberSummary(files[0].filter(x => x.decade == "2000").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines)))},
+    {x:'2010s', y:fiveNumberSummary(files[0].filter(x => x.decade == "2010").filter(x => x.total_lines > 0).map(a => parseFloat(a.unique_lines / a.total_lines)))}];
+
+  var options = {
+    series: [{type:'boxPlot', data:data}],
+    chart: {
+        type: 'boxPlot',
+        height: 350
+      },
+      title: {
+        text: 'Proportion of Lines that are Unique',
+        align: 'left'
+      },
+      plotOptions: {
+        boxPlot: {
+          colors: {
+            upper: '#5C4742',
+            lower: '#A5978B'
+          }
+        }
+      }
+      };
+
+      var chart = new ApexCharts(document.querySelector("#uniqueLinesChart"), options);
+      chart.render();
+}
+
+function sentimentAnalysis(files){
+
+  var options = {
+          series: [
+    {name: "1970s", data:files[0].filter(x => x.decade == "1970").filter(x => x.total_lines > 0).map(a => [parseFloat(a.pos), parseFloat(a.neg)])},
+    {name: "1980s", data:files[0].filter(x => x.decade == "1980").filter(x => x.total_lines > 0).map(a => [parseFloat(a.pos), parseFloat(a.neg)])},
+    {name: "1990s", data:files[0].filter(x => x.decade == "1990").filter(x => x.total_lines > 0).map(a => [parseFloat(a.pos), parseFloat(a.neg)])},
+    {name: "2000s", data:files[0].filter(x => x.decade == "2000").filter(x => x.total_lines > 0).map(a => [parseFloat(a.pos), parseFloat(a.neg)])},
+    {name: "2010s", data:files[0].filter(x => x.decade == "2010").filter(x => x.total_lines > 0).map(a => [parseFloat(a.pos), parseFloat(a.neg)])}
+  ],
+          chart: {
+          height: 500,
+          type: 'scatter',
+          zoom: {
+            enabled: true,
+            type: 'xy'
+          }
+        },
+        xaxis: {
+          tickAmount: 10,
+          labels: {
+            formatter: function(val) {
+              return parseFloat(val).toFixed(1)
+            }
+          }
+        },
+        yaxis: {
+          tickAmount: 7
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#sentimentScatterChart"), options);
+        chart.render();
+}
 //
 // function uniqueChords(files){
 //   data = [

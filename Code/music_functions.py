@@ -235,7 +235,7 @@ def get_structure_dict(file_list):
             data = json.load(json_file)
 
         sections = ["StartOfSong"]
-        sections.extend([clean_region(data[x]['type'][1:-1]) for x in data])
+        sections.extend([clean_region(data[x]['type'][1:-1]) for x in data if x != "Tonic"])
         sections.append("EndOfSong")
 
         for i in range(len(sections)-1):
@@ -260,7 +260,7 @@ def clean_structure_dict(structure_dict, maximum):
         # get the number of regions it maps after
         total_values = sum([sub_dict[k] for k in sub_dict])
         
-        # if the total occurrences of the region is less than or equal to the maxium, add to list
+        # if the total occurrences of the region is less than or equal to the maximum, add to list
         if total_values <= maximum:
             unique_values.append(region_id)
             

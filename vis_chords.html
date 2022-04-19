@@ -25,14 +25,16 @@
      </div>
    </div>
 
-   <div class="row"><div class="col-md-12"><h2>Total Number Chords</h2><p>Explanation</p></div></div>
+   <div class="row"><div class="col-md-12"><h2>Total Number Chords</h2><p>First, we look at the total number of chords in a song. A high number of chords for a song indicates that this song changes chords pretty frequently throughout the song. A lower number of chords indicates that a song does not change chords very frequently.</p>
+   <p>We can see that the total number of chords in a song has remained overall mostly stagnant over the years, with songs from the 1990's having the highest median number of chords (84) and songs from the 2000's having the lowest (71). </p></div></div>
    <div class="row"><div class="col-md-12" id="totalChordsChart"></div></div>
-<div class="row"><div class="col-md-12"><h2>Number of Unique Chords</h2><p>This metric is simple: the more chords a song has, the more complex the chord progression. Some songs take a minimalist approach, creating an entire 3+ minute song with only one or two chords, creating variation in other ways. Other songs use not only the seven songs in the key signature, but other "borrowed" chords as well, making the song more complicated.</p>
+<div class="row"><div class="col-md-12"><h2>Number of Unique Chords</h2><p>Next, we look at the number of unique chords in a song. Songs may have a high number of total chords, but it could be because the song iterates between the same two chords, or because the song uses many different chords. The more unique chords a song has, the more complex the chord progression. Some songs take a minimalist approach, creating an entire 3+ minute song with only one or two chords, creating variation in other ways. Other songs use not only the seven songs in the key signature, but other "borrowed" chords as well, making the song more complicated.</p>
 
 <p>Looking at the mean and median number of unique chords, it appears as though the number of unique chords has lowered slightly over time, indicating that modern music uses a slightly smaller set of chords on average.</p> </div></div>
    <div class="row"><div class="col-md-12" id="uniqueChordsChart"></div></div>
-<div class="row"><div class="col-md-12"><h2>Proportion of chords not in the key signature</h2><p>A key signature has seven chords that "belong" to that key signature. Including chords that are outside a given key signature adds color and drama to a song. Studying these histograms, we can clearly see that over time, musicians have become less inclined to include out-of-key-signature chords.</p></div></div>
-   <div class="row"><div class="col-md-12" id="inKeySigChart"></div></div>
+<div class="row"><div class="col-md-6"><h2>Proportion of chords not in the key signature</h2><p>A key signature has seven chords that "belong" to that key signature. Including chords that are outside a given key signature adds color and drama to a song. Studying the area chart provided, we can clearly see that over time, musicians have become less inclined to include out-of-key-signature chords.</p></div><div class="col-md-6" id="inKeySigChart"></div></div>
+   <div class="row"><div class="col-md-12"><h2>Conclusions</h2>
+   The number of chords has not changed much over the years, but use of borrowed chords has decreased.</div></div>
 
  </div>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -152,6 +154,7 @@ function totalChords(files){
     {x:'2010s', y:fiveNumberSummary(files[4].map(a => parseInt(a.total_chords)))}];
 
   var options = {
+
     series: [{type:'boxPlot', data:data}],
     chart: {
         type: 'boxPlot',
@@ -161,13 +164,15 @@ function totalChords(files){
         text: 'Total Number of Chords',
         align: 'left'
       },
+
       plotOptions: {
+
         boxPlot: {
-          colors: {
-            upper: '#5C4742',
-            lower: '#A5978B'
-          }
+
         }
+
+
+
       }
       };
 
@@ -195,10 +200,7 @@ function uniqueChords(files){
       },
       plotOptions: {
         boxPlot: {
-          colors: {
-            upper: '#5C4742',
-            lower: '#A5978B'
-          }
+
         }
       }
       };
