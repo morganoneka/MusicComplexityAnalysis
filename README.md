@@ -1,5 +1,8 @@
 # Music Complexity Analysis
 
+## Summary
+This project looks at musical complexity as it has changed since the 1970's. Check out the web page [here](https://morganoneka.github.io/MusicComplexityAnalysis/) to see the results!
+
 ## How to Run
 
 ### Scraping data from Ultimate Guitar
